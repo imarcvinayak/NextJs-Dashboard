@@ -1,76 +1,52 @@
-'use client'
+"use client";
 import { useEffect, useState } from "react";
-import PieChart from './PieChart';
-import BarChart from './BarChart';
-import LineChart from './LineChart';
-import BubbleChart from './BubbleChart';
-import StackChart from './StackChart';
-import Data from '../data/data.json'
-import './style.css'
+import ChartByValue from "./value/ChartComponent";
+import ChartByVolume from "./volume/ChartComponent";
+import SegmentList from "./segments/SegmentList"
+import Data from "../data/data.json";
+import "./style.css";
 
 function ChartList() {
-    const chartList = ['PieChart','BarChart','BubbleChart', 'LineChart','StackChart']
-    const [chartOption, setChartOption] = useState(0)
-    const [globalData, setGlobalData] = useState()
-    const [lineData, setLineData] = useState()
-    const width = '100%'
-    const height = '240px'
+  const [globalData, setGlobalData] = useState();
 
+  useEffect(() => {
+    if (!Data) return;
+    const data = Data.filter(
+      (d) => d["Report Name"] === "Global Pea Protein Market Report"
+    );
+    setGlobalData(data);
+  }, []);
 
-      useEffect(()=>{
-         if(!Data) return;
-         const data = Data.filter((d)=>d["Report Name"] === "Global Pea Protein Market Report");
-         setGlobalData(data)
-      },[])
-
-      const getLineData = (d) => {
-         setLineData(d)
-      }
-
-    const chartComponents = {
-      PieChart: <PieChart data={globalData} getLineData={getLineData} width={width} height={height}/>,
-      BarChart: <BarChart data={globalData} width={width} height={height}/>,
-      BubbleChart: <BubbleChart data={globalData} width={width} height={height}/>,
-      LineChart: <LineChart data={lineData||globalData} width={width} height={height}/>,
-      StackChart: <StackChart data={globalData} width={width} height={height}/>,
-  };
-      function sendID (id) {
-         setChartOption(id)
-      }
-    return ( 
-        <div className="ValueDistributionCharList" style={{marginLeft: '20px'}}>
-
-            {chartComponents.PieChart}
-            {chartComponents.StackChart}
-            {chartComponents.LineChart}
-
-           
-        </div>
-     );
+  return (
+    <>
+      <header></header>
+      <main className="main">
+        <SegmentList/> 
+      <div className="DistributionCharList" style={{ marginLeft: "20px" }}>
+        {globalData && <ChartByValue data={globalData} />}
+        {globalData && <ChartByVolume data={globalData} />}
+      </div>
+      </main>
+    </>
+  );
 }
 
 export default ChartList;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+{
+  /* <div>
+  <PieChart {...commonProps} yType={"Value"} />
+  <StackChart {...commonProps} yType={"Value"} />
+  <LineChart data={lineData || globalData} {...commonProps} />
+</div> */
+}
+{
+  /* <div>
+  <PieChart {...commonProps} yType={"Volume"} />
+  <StackChart {...commonProps} yType={"Volume"} />
+  <BubbleChart {...commonProps} />
+</div> */
+}
 
 // select your chart
 // <br></br>

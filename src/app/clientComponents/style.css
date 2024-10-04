@@ -1,4 +1,18 @@
-.ValueDistributionCharList{
-    display: flex;
-    width: 80%;  
+.main {
+  display: flex;
+}
+
+
+.DistributionCharList {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  text-align: center;
+  justify-content: right;
+}
+.DistributionCharList > * {
+  display: flex;
+}
+.DistributionCharList > div > div {
+  border: 1px solid;
 }
