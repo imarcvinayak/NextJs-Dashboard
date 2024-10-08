@@ -1,0 +1,9 @@
+.slider-container input {
+  color: black;
+  width: 100px;
+  background-color: #d1d9e2;
+}
+.slider-container .inputYear {
+  display: flex;
+  gap: 2px;
+}

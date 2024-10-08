@@ -3,18 +3,30 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import { useLayoutEffect } from "react";
+import { Switch } from "@mui/material";
 
 function LineChart({
-  data,
+  globalData: data,
   width,
   height,
+  segment,
   selectedSubSegment,
-  setSelectedSubSegemnt,
+  chartTitle,
+  showLabels,
+  setshowLabels,
 }) {
   useLayoutEffect(() => {
     if (!data) return;
+    let filteredLineChartData = [];
+    if (selectedSubSegment)
+      filteredLineChartData = data.filter(
+        (d) =>
+          d["Segment"] === segment && d["Sub-Segment"] === selectedSubSegment
+      );
+    else filteredLineChartData = data.filter((d) => d["Segment"] === segment);
+
     let lineData = {};
-    data.forEach((l) => {
+    filteredLineChartData?.forEach((l) => {
       const year = l.Year;
       const valueinusd = l.Value * 1e6;
       const volumeinMt = l.Volume * 1000;
@@ -27,7 +39,7 @@ function LineChart({
     const lineChartData = Object.keys(lineData).map((k) => {
       return {
         year: k,
-        value: lineData[k].value / lineData[k].volume,
+        value: Math.round(lineData[k].value / lineData[k].volume),
       };
     });
     // console.log(lineChartData);
@@ -101,7 +113,7 @@ function LineChart({
       stroke: root.interfaceColors.get("alternativeBackground"),
     });
 
-    series.bullets.push(function (root) {
+    series.bullets.push(function (root, s, dataItem) {
       let container = am5.Container.new(root, {});
       container.children.push(
         am5.Circle.new(root, {
@@ -109,6 +121,20 @@ function LineChart({
           fill: "#1976d2",
           stroke: root.interfaceColors.get("alternativeBackground"),
           strokeWidth: 2,
+        })
+      );
+
+      container.children.push(
+        am5.Label.new(root, {
+          text: showLabels.lineLabels
+            ? dataItem.dataContext.value.toString()
+            : "",
+          centerY: am5.p50,
+          centerX: am5.p50,
+          dy: -15,
+          // truncate: true,
+          maxWidth: "1px",
+          fontSize: 10,
         })
       );
 
@@ -125,11 +151,29 @@ function LineChart({
     return () => {
       root.dispose();
     };
-  });
+  },[data,segment,selectedSubSegment,showLabels[`lineLabels`]])
 
+  // {console.log)}
   return (
-    <div id="lineChart" style={{ width: width, height: height }}>
-      your line Chart
+    <div>
+      {" "}
+      <div className="chartheader">
+        {chartTitle["Value"]["lineChart"]}
+        <span style={{ float: "right" }}>
+          <Switch
+            size="small"
+            checked={showLabels[`lineLabels`]}
+            onClick={() =>
+              setshowLabels({
+                ...showLabels,
+                [`lineLabels`]: !showLabels[`lineLabels`],
+              })
+            }
+            sx={{ top: 0 }}
+          />
+        </span>
+      </div>
+      <div id="lineChart" style={{ width: width, height: height }}></div>
     </div>
   );
 }

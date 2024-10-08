@@ -1,23 +1,21 @@
 import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect } from "react";
 
 function PieChart({
   globalData: data,
   width,
   height,
+  segment,
   selectedSubSegment,
   setSelectedSubSegemnt,
-  getLineData,
   yType,
+  chartTitle,
 }) {
-  // const pieData = data
-  //   console.log(selectedSubSegment);
-  // const [yAxisType,setyAxisType] = useState(yType)
   useLayoutEffect(() => {
     if (!data) return;
-    const pieData = data.filter((d) => d["Segment"] === "Type");
+    const pieData = data.filter((d) => d["Segment"] === segment);
 
     const root = am5.Root.new(`${yType}pieChart`);
     root.setThemes([am5themes_Animated.new(root)]);
@@ -62,11 +60,7 @@ function PieChart({
     series.slices.template.events.on("click", (event) => {
       const dataItem = event.target.dataItem;
       if (dataItem) {
-        const lineData = pieData.filter(
-          (d) => d["Sub-Segment"] === dataItem.dataContext.category
-        );
         setSelectedSubSegemnt(dataItem.dataContext.category);
-        getLineData(lineData);
       }
     });
     series.slices.template.adapters.add(
@@ -97,11 +91,15 @@ function PieChart({
     return () => {
       root.dispose();
     };
-  }, [data, selectedSubSegment]);
+  }, [data, segment, selectedSubSegment,yType]);
 
   return (
-    <div id={yType + "pieChart"} style={{ width: width, height: height }}>
-      Pie Chart
+    <div>
+      <div className="chartheader">{chartTitle[yType]["pieChart"]}</div>
+      <div
+        id={yType + "pieChart"}
+        style={{ width: width, height: height }}
+      ></div>
     </div>
   );
 }

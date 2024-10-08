@@ -1,6 +1,6 @@
-function Segment() {
+function Segment({segment,setSegment}) {
     return ( 
-        <div>Your Customized Segment comes here</div>
+        <button className={segment+' segment'} onClick={setSegment(segment)}>{segment}</button>
      );
 }
 

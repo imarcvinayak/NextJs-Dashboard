@@ -1,23 +1,27 @@
-import { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect } from "react";
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
+import { Switch } from "@mui/material";
 
 function StackChart({
   globalData: data,
-  getLineData,
   width,
   height,
+  segment,
   selectedSubSegment,
   setSelectedSubSegemnt,
-  yType
+  yType,
+  chartTitle,
+  showLabels,
+  setshowLabels,
+  globalLabels
 }) {
-  // const [selectedstack, setSelectedStack] = useState("");
-
+  // console.log(year);
   useLayoutEffect(() => {
     if (!data) return;
     //filter data
-    let defaultData = data.filter((d) => d["Segment"] === "Type");
+    let defaultData = data.filter((d) => d["Segment"] === segment);
 
     const stackDummyData = {};
     defaultData.forEach((d) => {
@@ -48,17 +52,17 @@ function StackChart({
         wheelX: "panX",
         wheelY: "zoomX",
         paddingLeft: 0,
-        // layout: root.verticalLayout,
+        layout: root.verticalLayout,
       })
     );
-    let legend = chart.children.unshift(
-      am5.Legend.new(root, {
-        centerX: am5.p50,
-        x: am5.p50,
-        layout: root.horizontalLayout,
-        fontSize: "12px !important",
-      })
-    );
+    // let legend = chart.children.unshift(
+    //   am5.Legend.new(root, {
+    //     centerX: am5.p50,
+    //     x: am5.p50,
+    //     layout: root.horizontalLayout,
+    //     fontSize: "12px !important",
+    //   })
+    // );
 
     //create Axes
     //x
@@ -118,9 +122,6 @@ function StackChart({
         // const clickedColumn = event.target.dataItem;
         // const seriesName = series.get("name");
 
-        const lineData = defaultData.filter((d) => d["Sub-Segment"] === name);
-        getLineData(lineData);
-
         setSelectedSubSegemnt(name);
         chart.series.each((s) => {
           const isSelected = s == clickedSeries;
@@ -134,11 +135,37 @@ function StackChart({
       });
       series.columns.template.setAll({
         color: 0x8e44ad,
+        tooltipText:
+          "Year: {categoryX}\nSub-segment: {name}\nSum of value: ${valueY}\nTotal: ${total}",
+        tooltipY: am5.percent(10),
         fillOpacity:
           selectedSubSegment === "" || name === selectedSubSegment ? 1 : 0.2,
         strokeOpacity:
           selectedSubSegment === "" || name === selectedSubSegment ? 1 : 0.2,
       });
+
+      series.bullets.push(() => {
+        return (
+          showLabels[`stacked${yType}Labels`] &&
+          am5.Bullet.new(root, {
+            locationY: 0.5,
+            sprite: am5.Label.new(root, {
+              text: "{valueY.formatNumber('#.')}",
+              fill: am5.color(0xffffff),
+              // background: am5.RoundedRectangle.new(root, {
+              //   fill: am5.color(0x000000),
+              //   fillOpacity: 0.5,
+              //   cornerRadius: 5,
+              // }),
+              centerY: am5.p50,
+              centerX: am5.p50,
+              populateText: true,
+              fontSize: 10,
+            }),
+          })
+        );
+      });
+
       series.data.setAll(stackData);
       series.appear();
     }
@@ -152,11 +179,31 @@ function StackChart({
     return () => {
       root.dispose();
     };
-  });
+  }, [data, segment, selectedSubSegment, yType, showLabels[`stacked${yType}Labels`]]);
 
   return (
-    <div id={yType+"stackChart"} style={{ width: width, height: height }}>
-      Your Stack Chart
+    <div>
+      <div className="chartheader">
+        {chartTitle[yType]["stackChart"]}
+
+        <span style={{ float: "right" }}>
+          <Switch
+            size="small"
+            checked={showLabels[`stacked${yType}Labels`]}
+            onClick={() =>
+              setshowLabels({
+                ...showLabels,
+                [`stacked${yType}Labels`]: !showLabels[`stacked${yType}Labels`],
+              })
+            }
+            sx={{ top: 0 }}
+          />
+        </span>
+      </div>
+      <div
+        id={yType + "stackChart"}
+        style={{ width: width, height: height }}
+      ></div>
     </div>
   );
 }
