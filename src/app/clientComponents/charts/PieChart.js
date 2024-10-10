@@ -1,4 +1,5 @@
 import * as am5 from "@amcharts/amcharts5";
+import { Settings } from "@amcharts/amcharts5/.internal/core/util/Entity";
 import * as am5percent from "@amcharts/amcharts5/percent";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import React, { useLayoutEffect } from "react";
@@ -9,13 +10,16 @@ function PieChart({
   height,
   segment,
   selectedSubSegment,
-  setSelectedSubSegemnt,
+  setSelectedSubSegment,
+  selectedSubSegments,
   yType,
   chartTitle,
+  setColors,
 }) {
   useLayoutEffect(() => {
     if (!data) return;
-    const pieData = data.filter((d) => d["Segment"] === segment);
+    // const pieData = data.filter((d) => d["Segment"] === segment);
+    const pieData = [...data];
 
     const root = am5.Root.new(`${yType}pieChart`);
     root.setThemes([am5themes_Animated.new(root)]);
@@ -39,6 +43,8 @@ function PieChart({
       oversizedBehavior: "wrap",
       fontSize: 10,
     });
+    setColors(series.get("colors")._settings.colors)
+    // console.log(series.get("colors")._settings.colors)
 
     const processData = (data) => {
       const agredatedata = {};
@@ -60,7 +66,9 @@ function PieChart({
     series.slices.template.events.on("click", (event) => {
       const dataItem = event.target.dataItem;
       if (dataItem) {
-        setSelectedSubSegemnt(dataItem.dataContext.category);
+        if (selectedSubSegment !== dataItem.dataContext.category)
+          setSelectedSubSegment(dataItem.dataContext.category);
+        else setSelectedSubSegment("");
       }
     });
     series.slices.template.adapters.add(
@@ -91,11 +99,11 @@ function PieChart({
     return () => {
       root.dispose();
     };
-  }, [data, segment, selectedSubSegment,yType]);
+  }, [data, segment, selectedSubSegments, selectedSubSegment, yType]);
 
   return (
     <div>
-      <div className="chartheader">{chartTitle[yType]["pieChart"]}</div>
+      <h4 className="chartheader">{chartTitle[yType]["pieChart"]}</h4>
       <div
         id={yType + "pieChart"}
         style={{ width: width, height: height }}

@@ -10,7 +10,7 @@
   border: 2px solid #000000;
   border-radius: 15px;
   width: 200px;
-  height: 130px;
+  height: 120px;
   padding: 10px;
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -18,23 +18,23 @@
 
 /* Card content styling */
 .card-content h3 {
-  font-size: 16px;
+  font-size: 14px;
   color: #ffffff;
   font-weight: bold;
 }
 
 .card-content p {
-  font-size: 14px;
+  font-size: 12px;
   color: #ffffff;
 }
 
 .card-content h2 {
-  font-size: 30px;
+  font-size: 28px;
   font-weight: bold;
   color: #ffffff;
 }
 
 .card-content span {
-  font-size: 14px;
+  font-size: 12px;
   color: #ffffff;
 }

@@ -11,9 +11,12 @@ function LineChart({
   height,
   segment,
   selectedSubSegment,
+  selectedSubSegments,
   chartTitle,
   showLabels,
   setshowLabels,
+  selectedLineChartCircle,
+  setselectedLineChartCircle,
 }) {
   useLayoutEffect(() => {
     if (!data) return;
@@ -42,8 +45,7 @@ function LineChart({
         value: Math.round(lineData[k].value / lineData[k].volume),
       };
     });
-    // console.log(lineChartData);
-    // console.log(lineData);
+
 
     let root = am5.Root.new("lineChart");
     root.setThemes([am5themes_Animated.new(root)]);
@@ -96,6 +98,7 @@ function LineChart({
         }),
       })
     );
+    yAxis.get("renderer").grid.template.setAll({ visible: false });
     let series = chart.series.push(
       am5xy.LineSeries.new(root, {
         name: "Series",
@@ -115,7 +118,7 @@ function LineChart({
 
     series.bullets.push(function (root, s, dataItem) {
       let container = am5.Container.new(root, {});
-      container.children.push(
+      let circle = container.children.push(
         am5.Circle.new(root, {
           radius: 5,
           fill: "#1976d2",
@@ -138,6 +141,10 @@ function LineChart({
         })
       );
 
+      // circle.events.on("click", function (e) {
+      //   setselectedLineChartCircle(e.target.dataItem.dataContext);
+      // });
+
       return am5.Bullet.new(root, {
         sprite: container,
       });
@@ -151,13 +158,17 @@ function LineChart({
     return () => {
       root.dispose();
     };
-  },[data,segment,selectedSubSegment,showLabels[`lineLabels`]])
-
-  // {console.log)}
+  }, [
+    data,
+    segment,
+    selectedSubSegment,
+    selectedSubSegments,
+    showLabels[`lineLabels`],
+  ]);
   return (
     <div>
       {" "}
-      <div className="chartheader">
+      <h4 className="chartheader">
         {chartTitle["Value"]["lineChart"]}
         <span style={{ float: "right" }}>
           <Switch
@@ -172,7 +183,7 @@ function LineChart({
             sx={{ top: 0 }}
           />
         </span>
-      </div>
+      </h4>
       <div id="lineChart" style={{ width: width, height: height }}></div>
     </div>
   );

@@ -1,29 +1,27 @@
 .mainheader {
   display: flex;
-  flex-direction: column;
-  /* align-items: center; */
-  text-align: center;
-
-  padding: 20px 60px;
+  justify-content: space-between;
+  padding: 0px 30px;
   background-color: #2c3e50;
   color: #ecf0f1;
   width: 100%;
-}
-.header {
-  display: flex;
-  justify-content: space-between;
-}
-.Showlables {
-  width: 202px;
-  display: flex;
-  gap: 10px;
   text-align: center;
 }
-.filterContainer {
+.flex-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  /* gap: 20px; */
+  flex-direction: column;
+  gap: 5px;
+}
+.flex-header-2 h1 {
+  font-size: 35px;
+  font-weight: 500;
+}
+.flex-header-3 {
+  gap: 20px;
+  justify-content: center;
+}
+.Showlables .MuiSwitch-root {
+  margin-left: 10px;
 }
 .selectSubsegmentContainer {
   background-color: #d1d9e2;
@@ -40,7 +38,6 @@
   color: rgb(114, 160, 212);
 }
 .selectSubSegment {
-  width: 300px;
   height: 40px;
   color: black;
 }
@@ -63,11 +60,4 @@
   font-weight: bold;
   border: 1px solid #000;
   text-align: center;
-}
-.blank {
-  width: 220px;
-}
-.Cagroutput {
-  /* margin-bottom: 20px; */
-  transform: translateY(-20px);
 }

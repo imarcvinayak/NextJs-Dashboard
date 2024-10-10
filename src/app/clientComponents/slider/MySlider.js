@@ -15,7 +15,6 @@ function MySlider({ year, setyear }) {
     });
   };
   const handleInputChange = (e, type) => {
-    console.log(e.target.value);
     if (type === "start") {
       setyear({
         ...year,

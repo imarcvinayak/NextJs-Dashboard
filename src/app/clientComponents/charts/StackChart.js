@@ -10,18 +10,18 @@ function StackChart({
   height,
   segment,
   selectedSubSegment,
-  setSelectedSubSegemnt,
+  setSelectedSubSegment,
+  selectedSubSegments,
   yType,
   chartTitle,
   showLabels,
   setshowLabels,
-  globalLabels
 }) {
-  // console.log(year);
   useLayoutEffect(() => {
     if (!data) return;
     //filter data
-    let defaultData = data.filter((d) => d["Segment"] === segment);
+    // let defaultData = data.filter((d) => d["Segment"] === segment);
+    let defaultData = [...data];
 
     const stackDummyData = {};
     defaultData.forEach((d) => {
@@ -35,8 +35,13 @@ function StackChart({
       return stackDummyData;
     });
     const stackData = Object.values(stackDummyData);
+    stackData.map((d) => {
+      const key = d.key;
+      const subsegments = Object.keys(d).filter((d) => d !== "key");
+      const total = subsegments.reduce((acc, cur) => (acc += d[cur]), 0);
 
-    // console.log(stackDummyData);
+      return (d["total"] = total.toFixed(2));
+    });
 
     //create root
     let root = am5.Root.new(`${yType}stackChart`);
@@ -88,6 +93,7 @@ function StackChart({
       })
     );
 
+    xAxis.get("renderer").grid.template.setAll({ visible: false });
     xRenderer.grid.template.setAll({
       location: 1,
     });
@@ -101,6 +107,7 @@ function StackChart({
         }),
       })
     );
+    yAxis.get("renderer").grid.template.setAll({ visible: false });
     //create series for each stack
     function createSeries(name) {
       let series = chart.series.push(
@@ -121,8 +128,8 @@ function StackChart({
         const clickedSeries = event.target.dataItem.component;
         // const clickedColumn = event.target.dataItem;
         // const seriesName = series.get("name");
-
-        setSelectedSubSegemnt(name);
+        if (selectedSubSegment !== name) setSelectedSubSegment(name);
+        else setSelectedSubSegment("");
         chart.series.each((s) => {
           const isSelected = s == clickedSeries;
 
@@ -134,7 +141,7 @@ function StackChart({
         });
       });
       series.columns.template.setAll({
-        color: 0x8e44ad,
+        // color: 0x8e44ad,
         tooltipText:
           "Year: {categoryX}\nSub-segment: {name}\nSum of value: ${valueY}\nTotal: ${total}",
         tooltipY: am5.percent(10),
@@ -179,11 +186,18 @@ function StackChart({
     return () => {
       root.dispose();
     };
-  }, [data, segment, selectedSubSegment, yType, showLabels[`stacked${yType}Labels`]]);
+  }, [
+    data,
+    segment,
+    selectedSubSegment,
+    selectedSubSegments,
+    yType,
+    showLabels[`stacked${yType}Labels`],
+  ]);
 
   return (
     <div>
-      <div className="chartheader">
+      <h4 className="chartheader">
         {chartTitle[yType]["stackChart"]}
 
         <span style={{ float: "right" }}>
@@ -199,7 +213,7 @@ function StackChart({
             sx={{ top: 0 }}
           />
         </span>
-      </div>
+      </h4>
       <div
         id={yType + "stackChart"}
         style={{ width: width, height: height }}

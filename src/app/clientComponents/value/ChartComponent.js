@@ -5,25 +5,38 @@ import StackChart from "../charts/StackChart";
 
 function ChartComponent({
   data,
+  width,
+  height,
   segment,
   selectedSubSegment,
-  setSelectedSubSegemnt,
+  setSelectedSubSegment,
+  selectedSubSegments,
+  setSelectedSubSegments,
   chartTitle,
   year,
   showLabels,
   setshowLabels,
-  globalLabels
+  globalLabels,
+  selectedLineChartCircle,
+  setselectedLineChartCircle,
+  isValueFieldEmpty,
+  setIsValueFieldEmpty,
+  colors,
+  setColors,
+
 }) {
   const [globalData, setGlobalData] = useState();
-  const width = "100%";
-  const height = "240px";
-  // console.log(segment)
+  // const width = "100%";
+  // const height = "230px";
+
   useEffect(() => {
     if (!data) return;
+    const isValueFieldEmpty = data.every(d=>d.Value === '')
+    setIsValueFieldEmpty(isValueFieldEmpty)
     setGlobalData(data);
-  }, [data]);
+  }, [data,isValueFieldEmpty]);
 
-  // console.log(data, "ll");
+
 
   const commonProps = {
     globalData,
@@ -31,19 +44,25 @@ function ChartComponent({
     height,
     segment,
     selectedSubSegment,
-    setSelectedSubSegemnt,
+    setSelectedSubSegment,
+    selectedSubSegments,
+    setSelectedSubSegments,
     chartTitle,
     year,
     showLabels,
     setshowLabels,
-    globalLabels
+    globalLabels,
+    selectedLineChartCircle,
+    setselectedLineChartCircle,
+    colors,
+    setColors,
   };
   return (
-    <div className="ValueDistributionCharList">
-      <PieChart {...commonProps} yType={"Value"} />
-      <StackChart {...commonProps} yType={"Value"}  />
+    <>
+      {!isValueFieldEmpty && <PieChart {...commonProps} yType={"Value"} />}
+      {!isValueFieldEmpty && <StackChart {...commonProps} yType={"Value"} />}
       <LineChart data={globalData} {...commonProps} />
-    </div>
+    </>
   );
 }
 

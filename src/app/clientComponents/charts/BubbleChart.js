@@ -18,7 +18,11 @@ function BubbleChart({
   height,
   segment,
   selectedSubSegment,
+  setSelectedSubSegment,
+  selectedSubSegments,
   chartTitle,
+  colors,
+  setColors,
 }) {
   useLayoutEffect(() => {
     if (!data) return;
@@ -40,28 +44,26 @@ function BubbleChart({
       if (!subSegments[key]) subSegments[key] = [];
       subSegments[key].push(d);
     });
-    // console.log(subSegments);
+
     const aggregatedData = [];
-    Object.keys(subSegments).forEach((key) => {
+    Object.keys(subSegments).forEach((key, i) => {
       const item = subSegments[key];
       const initialYear = Math.min(...item.map((d) => d["Year"]));
       const finalYear = Math.max(...item.map((d) => d["Year"]));
       const years = finalYear - initialYear;
       const initialValue = item.find((d) => d["Year"] === initialYear).Value;
       const endingValue = item.find((d) => d["Year"] === finalYear).Value;
-
       const cagr = calculateCagrValue(initialValue, endingValue, years);
       aggregatedData.push({
         subSegment: key,
         cagr: cagr,
         value: endingValue,
+        color: colors[i],
       });
       // return aggregatedData
     });
 
     // const filterData = data.filter((d)=>d['Segment']==='Type')
-
-    // console.log(aggregatedData);
 
     // Create root element
     let root = am5.Root.new("bubbleChart");
@@ -100,6 +102,7 @@ function BubbleChart({
       fontSize: 12, // Set the font size for x-axis labels
       // rotation: -35,
     });
+    xAxis.get("renderer").grid.template.setAll({ visible: false });
 
     //y
     let yAxis = chart.yAxes.push(
@@ -123,6 +126,7 @@ function BubbleChart({
     yAxis.get("renderer").labels.template.setAll({
       fontSize: 12,
     });
+    yAxis.get("renderer").grid.template.setAll({ visible: false });
 
     // Add bubble series
     const series = chart.series.push(
@@ -134,23 +138,38 @@ function BubbleChart({
         valueYField: "cagr",
         seriesTooltipTarget: "bullet",
         tooltip: Tooltip.new(root, {
-          pointerOrientation: "horizontal",
-          labelText:
-            "[bold]{subSegment}[/]\nValue: {valueX.formatNumber('#,###.')}\nCAGR: {valueY.formatNumber('#.#')}%",
+          pointerOrientation: "down",
+          // labelText:
+          //   "[bold]{subSegment}[/]\nValue: {valueX.formatNumber('#,###.')}\nCAGR: {valueY.formatNumber('#.#')}%",
         }),
       })
     );
     // series.strokes.template.set("visible", false);
 
     let circleTemplate = Template.new({});
-
     // Set up circle bullets (bubbles)
-    series.bullets.push(() => {
+
+    series.bullets.push((root, series, dataItem) => {
+      // console.log(dataItem);
       let bulletCircle = Circle.new(root, {
         radius: 10,
-        fill: am5.color("#6771DC"),
+        fill: dataItem.dataContext.color,
         fillOpacity: 1,
-        tooltipText: "{subSegment}: CAGR {cagr}, value {value}",
+        tooltipText:
+          "[bold]{subSegment}[/]\nValue: {valueX.formatNumber('#,###.')}\nCAGR: {valueY.formatNumber('#.#')}%",
+        // tooltipPosition: "pointer",
+        tooltipPointerOrientation: "vertical",
+      });
+
+      bulletCircle.events.on("click", (event) => {
+        const {
+          target: {
+            dataItem: {
+              dataContext: { subSegment },
+            },
+          },
+        } = event;
+        setSelectedSubSegment(!selectedSubSegment ? subSegment : "");
       });
 
       bulletCircle.states.create("hover", {
@@ -163,6 +182,8 @@ function BubbleChart({
       // return am5.Bullet.new(root, { sprite: circle });
     });
 
+    // console.log();
+    // console.log(am5.Color.brighten(colorset._settings.colors[0]._hex));
     series.set("heatRules", [
       {
         target: circleTemplate,
@@ -193,10 +214,10 @@ function BubbleChart({
     return () => {
       root.dispose();
     };
-  },[data,segment,selectedSubSegment]);
+  }, [data, segment, selectedSubSegment, selectedSubSegments, colors]);
   return (
     <div>
-      <div className="chartheader">{chartTitle["Volume"]["bubbleChart"]}</div>
+      <h4 className="chartheader">{chartTitle["Volume"]["bubbleChart"]}</h4>
 
       <div id="bubbleChart" style={{ width: width, height: height }}></div>
     </div>

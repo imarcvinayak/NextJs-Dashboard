@@ -16,7 +16,9 @@ function ChartList() {
     stackedVolumeLabels: false,
   });
   const [globalLabels, setGlobalLabels] = useState(false);
-  const [selectedSubSegment, setSelectedSubSegemnt] = useState("");
+  const [selectedSubSegment, setSelectedSubSegment] = useState("");
+  const [selectedLineChartCircle, setselectedLineChartCircle] = useState({});
+  const [selectedSubSegments, setSelectedSubSegments] = useState([]);
   const [segments, setSegments] = useState([]);
   const [subSegments, setSubSegments] = useState([]);
   const [segment, setSegment] = useState("Type");
@@ -25,6 +27,8 @@ function ChartList() {
     end: 0,
   });
 
+  const [isValueFieldEmpty, setIsValueFieldEmpty] = useState(false);
+  const [isVolumeFieldEmpty, setIsVolumeFieldEmpty] = useState(false);
   const [historicalValueCAGR, setHistoricalValueCAGR] = useState(0);
   const [forecastValueCAGR, setForecastValueCAGR] = useState(0);
   const [historicalvolumeCAGR, setHistoricalVolumeCAGR] = useState(0);
@@ -33,6 +37,10 @@ function ChartList() {
   const [totalVolumeCAGR, setTotalVolumeCAGR] = useState(0);
   let currentYear = new Date().getFullYear();
   let prevYear = new Date().getFullYear() - 1;
+
+  const [colors, setColors] = useState([]);
+  // const [selectedSubSegmentscolor, setSelectedSubSegmentscolor] = useState([]);
+  // console.log(colors);
 
   function calculateCAGR(beginningValue, endingValue, numberOfYears) {
     let cagr = Math.pow(endingValue / beginningValue, 1 / numberOfYears) - 1;
@@ -68,8 +76,16 @@ function ChartList() {
 
   useEffect(() => {
     if (!Data) return;
-    const filteredDataByReportName = Data.filter(
-      (d) => d["Report Name"] === "Global Pea Protein Market Report"
+    const filteredData = Data.filter(
+      (item) =>
+        item["Report Name"] === "Global Pea Protein Market Report" &&
+        item.Year >= year.start &&
+        item.Year <= year.end &&
+        item.Segment === segment &&
+        (selectedSubSegments.length === 0 ||
+          selectedSubSegments.includes(item["Sub-Segment"])) &&
+        (!selectedSubSegment.length ||
+          selectedSubSegment === item["Sub-Segment"])
     );
     let totalValueforMinYear = 0;
     let totalValueforMaxYear = 0;
@@ -80,7 +96,7 @@ function ChartList() {
     let prevYearValue = 0;
     let prevYearVolume = 0;
 
-    filteredDataByReportName.forEach((d) => {
+    filteredData.forEach((d) => {
       if (d.Year === year.start) {
         totalValueforMinYear += d.Value || 0;
         totalVolumeforMinYear += Number(d.Volume) || 0;
@@ -141,15 +157,23 @@ function ChartList() {
         year.end - year.start
       )
     );
-  }, [year]);
+  }, [year, segment, selectedSubSegments, selectedSubSegment]);
 
   useEffect(() => {
     if (!Data) return;
     const data = Data.filter(
       (d) => d["Report Name"] === "Global Pea Protein Market Report"
     );
-    const filteredYearWiseData = data.filter(
-      (d) => d.Year >= year.start && d.Year <= year.end
+    // const filteredYearWiseData = data.filter(
+    //   (d) => d.Year >= year.start && d.Year <= year.end
+    // );
+    const filteredData = data.filter(
+      (item) =>
+        item.Year >= year.start &&
+        item.Year <= year.end &&
+        item.Segment === segment &&
+        (selectedSubSegments.length === 0 ||
+          selectedSubSegments.includes(item["Sub-Segment"]))
     );
     const segmentList = [
       ...new Set(
@@ -166,9 +190,9 @@ function ChartList() {
       ),
     ];
     setSubSegments(subSegmentList);
-    setGlobalData(filteredYearWiseData);
+    setGlobalData(filteredData);
     setSegments(segmentList);
-  }, [year, segment]);
+  }, [year, selectedSubSegment, selectedSubSegments, segment]);
 
   const chartTitle = {
     Value: {
@@ -183,15 +207,23 @@ function ChartList() {
     },
   };
   const commonProps = {
+    width: "100%",
+    height: "232px",
     data: globalData,
     segment,
     selectedSubSegment,
-    setSelectedSubSegemnt,
+    setSelectedSubSegment,
+    selectedSubSegments,
+    setSelectedSubSegments,
     chartTitle,
     year,
     showLabels,
     setshowLabels,
     globalLabels,
+    selectedLineChartCircle,
+    setselectedLineChartCircle,
+    colors,
+    setColors,
   };
 
   return (
@@ -202,7 +234,9 @@ function ChartList() {
         segment={segment}
         subSegments={subSegments}
         selectedSubSegment={selectedSubSegment}
-        setSelectedSubSegemnt={setSelectedSubSegemnt}
+        setSelectedSubSegment={setSelectedSubSegment}
+        selectedSubSegments={selectedSubSegments}
+        setSelectedSubSegments={setSelectedSubSegments}
         ValueCAGR={totalValueCAGR}
         VolumeCAGR={totalVolumeCAGR}
         globalLabels={globalLabels}
@@ -210,41 +244,76 @@ function ChartList() {
       />
       <main className="main">
         <div className="cards">
-          <CardValue
-            h3="Historical Value"
-            p={"CAGR"}
-            h2={historicalValueCAGR}
-            span={
-              year.start + " - " + (prevYear < year.end ? prevYear : year.end)
-            }
-          />
-          <CardValue
-            h3="Forecast Value"
-            p={"CAGR"}
-            h2={forecastValueCAGR}
-            span={year.start + " - " + year.end}
-          />
-          <CardValue
-            h3="Historical Volume"
-            p={"CAGR"}
-            h2={historicalvolumeCAGR}
-            span={
-              year.start + " - " + (prevYear < year.end ? prevYear : year.end)
-            }
-          />
-          <CardValue
-            h3="Forecast Volume"
-            p={"CAGR"}
-            h2={forecastVolumeCAGR}
-            span={year.start + " - " + year.end}
-          />
+          {!isValueFieldEmpty ? (
+            <>
+              <CardValue
+                h3="Historical Value"
+                p={"CAGR"}
+                h2={historicalValueCAGR}
+                span={
+                  year.start +
+                  " - " +
+                  (prevYear < year.end ? prevYear : year.end)
+                }
+              />
+              <CardValue
+                h3="Forecast Value"
+                p={"CAGR"}
+                h2={forecastValueCAGR}
+                span={currentYear + " - " + year.end}
+              />
+            </>
+          ) : null}
+          {!isVolumeFieldEmpty ? (
+            <>
+              <CardValue
+                h3="Historical Volume"
+                p={"CAGR"}
+                h2={historicalvolumeCAGR}
+                span={
+                  year.start +
+                  " - " +
+                  (prevYear < year.end ? prevYear : year.end)
+                }
+              />
+              <CardValue
+                h3="Forecast Volume"
+                p={"CAGR"}
+                h2={forecastVolumeCAGR}
+                span={currentYear + " - " + year.end}
+              />
+            </>
+          ) : null}
         </div>
-        <div className="DistributionCharList" style={{ marginLeft: "20px" }}>
-          {globalData && <ChartByValue {...commonProps} />}
-          {globalData && <ChartByVolume {...commonProps} />}
+        <div
+          className={
+            "DistributionCharList " +
+            (isVolumeFieldEmpty || isValueFieldEmpty ? "flex50" : "flex33")
+          }
+          style={{ marginLeft: "20px" }}
+        >
+          {globalData && (
+            <ChartByValue
+              isValueFieldEmpty={isValueFieldEmpty}
+              setIsValueFieldEmpty={setIsValueFieldEmpty}
+              {...commonProps}
+            />
+          )}
+          {globalData && (
+            <ChartByVolume
+              isVolumeFieldEmpty={isVolumeFieldEmpty}
+              setIsVolumeFieldEmpty={setIsVolumeFieldEmpty}
+              {...commonProps}
+            />
+          )}
         </div>
       </main>
-      <Footer segments={segments} setSegment={setSegment} />
+      <Footer
+        segments={segments}
+        setSegment={setSegment}
+        setSelectedSubSegment={setSelectedSubSegment}
+        setSelectedSubSegments={setSelectedSubSegments}
+      />
     </>
   );
 }

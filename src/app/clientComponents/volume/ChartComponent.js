@@ -5,40 +5,59 @@ import BubbleChart from "../charts/BubbleChart";
 
 function ChartComponent({
   data,
+  width,
+  height,
   segment,
   selectedSubSegment,
-  setSelectedSubSegemnt,
+  setSelectedSubSegment,
+  selectedSubSegments,
+  setSelectedSubSegments,
   chartTitle,
   showLabels,
   setshowLabels,
-  globalLabels
+  globalLabels,
+  selectedLineChartCircle,
+  setSelectedLineChartCircle,
+  isVolumeFieldEmpty,
+  setIsVolumeFieldEmpty,
+  colors,
+  setColors,
 }) {
   const [globalData, setGlobalData] = useState();
-  const width = "100%";
-  const height = "240px";
+  // const [isVolumeFieldEmpty, setIsVolumeFieldEmpty] = useState(false);
+  // const width = "100%";
+  // const height = "230px";
 
   useEffect(() => {
     if (!data) return;
+    const isVolumeFieldEmpty = data.every((d) => d.Volume === "");
+    setIsVolumeFieldEmpty(isVolumeFieldEmpty);
     setGlobalData(data);
-  }, [data]);
+  }, [data, isVolumeFieldEmpty]);
   const commonProps = {
     globalData,
     width,
     height,
     segment,
     selectedSubSegment,
-    setSelectedSubSegemnt,
+    setSelectedSubSegment,
+    selectedSubSegments,
+    setSelectedSubSegments,
     chartTitle,
     showLabels,
     setshowLabels,
-    globalLabels
+    globalLabels,
+    selectedLineChartCircle,
+    setSelectedLineChartCircle,
+    colors,
+    setColors,
   };
   return (
-    <div className="VolumeDistributionCharList">
-      <PieChart {...commonProps} yType={"Volume"} />
-      <StackChart {...commonProps} yType={"Volume"} />
+    <>
+      {!isVolumeFieldEmpty && <PieChart {...commonProps} yType={"Volume"} />}
+      {!isVolumeFieldEmpty && <StackChart {...commonProps} yType={"Volume"} />}
       <BubbleChart {...commonProps} />
-    </div>
+    </>
   );
 }
 

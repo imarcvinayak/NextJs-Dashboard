@@ -1,4 +1,4 @@
-.main {
+:root .main {
   display: flex;
   justify-content: space-evenly;
 }
@@ -10,8 +10,21 @@
   text-align: center;
   justify-content: right;
 }
-.DistributionCharList > div {
+.DistributionCharList {
   display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.DistributionCharList > div {
+  /* display: flex; */
+  /* flex-wrap: wrap; */
+  /* width: 33%; */
+}
+.flex33 > div{
+  flex: 1 0 33%;
+}
+.flex50 > div{
+  flex: 1 0 50%;
 }
 .DistributionCharList > div > div {
   border: 1px solid;
@@ -50,5 +63,8 @@ footer {
 .chartheader {
   background-color: rgb(49, 52, 92);
   color: #ecf0f1;
-  font-size: 18px;
+  font-size: 16px;
+}
+.cards .card:nth-child(3) {
+  margin-top: 15px;
 }
