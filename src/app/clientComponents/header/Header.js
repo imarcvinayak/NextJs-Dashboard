@@ -10,6 +10,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import "./style.css";
+import { useState } from "react";
 // import Image from "next/image";
 
 function Header({
@@ -17,7 +18,6 @@ function Header({
   setyear,
   segment,
   subSegments,
-  selectedSubSegment,
   setSelectedSubSegment,
   selectedSubSegments,
   setSelectedSubSegments,
@@ -25,10 +25,25 @@ function Header({
   VolumeCAGR,
   globalLabels,
   handleGlobalToggle,
+  prevYear,
+  currentYear,
+  isValueFieldEmpty,
+  isVolumeFieldEmpty,
 }) {
+  const isAllSelected =
+    subSegments.length > 0 && selectedSubSegments.length === subSegments.length;
+
   const handleChange = (e) => {
+    const value = e.target.value;
+    console.log(value);
+    if (value[value.length - 1] === "all") {
+      setSelectedSubSegments(
+        selectedSubSegments.length === subSegments.length ? [] : subSegments
+      );
+      return;
+    }
     setSelectedSubSegment("");
-    setSelectedSubSegments(e.target.value);
+    setSelectedSubSegments(value);
   };
   return (
     <header className="mainheader">
@@ -42,7 +57,12 @@ function Header({
             sx={{ top: 0 }}
           />
         </div>
-        <MySlider year={year} setyear={setyear} />
+        <MySlider
+          year={year}
+          setyear={setyear}
+          prevYear={prevYear}
+          currentYear={currentYear}
+        />
       </div>
       <div className="flex-header-2 flex-header">
         <h1>Global Pea Protein Market Report by {segment}</h1>
@@ -61,6 +81,10 @@ function Header({
               selectedSubSegments.join(", ")
             }
           >
+            <MenuItem value="all" key={"all"}>
+              <Checkbox checked={isAllSelected} />
+              <ListItemText primary="Select All" />
+            </MenuItem>
             {subSegments.map((subSegment) => {
               return (
                 <MenuItem value={subSegment} key={subSegment}>
@@ -76,19 +100,23 @@ function Header({
       </div>
       <div className="flex-header-3 flex-header">
         <div className="pillContainer">
-          <div className="valuePill pillStyle">
-            <h5>Value</h5>
-            <h5>{ValueCAGR}</h5>
-          </div>
+          {!isValueFieldEmpty && (
+            <div className="valuePill pillStyle">
+              <h5>Value</h5>
+              <h5>{ValueCAGR}</h5>
+            </div>
+          )}
           <h3>
             CAGR
             <br />
             {year.start} - {year.end}
           </h3>
-          <div className="volumePill pillStyle">
-            <h5>Volume</h5>
-            <h5>{VolumeCAGR}</h5>
-          </div>
+          {!isVolumeFieldEmpty && (
+            <div className="volumePill pillStyle">
+              <h5>Volume</h5>
+              <h5>{VolumeCAGR}</h5>
+            </div>
+          )}
         </div>
       </div>
     </header>
@@ -96,62 +124,3 @@ function Header({
 }
 
 export default Header;
-
-/* <div className="header">
-        <div className="Showlables">
-          Show All Labels
-          <Switch
-            size="small"
-            checked={globalLabels}
-            onClick={handleGlobalToggle}
-            sx={{ top: 0 }}
-          />
-        </div>
-        <h1>Global Pea Protein Market Report by {segment}</h1>
-        <div className="blank">
-        <h3>
-            CAGR
-            <br />
-            {year.start} - {year.end}
-          </h3> </div>
-      </div>
-      <div className="filterContainer">
-        <MySlider year={year} setyear={setyear} />
-        <FormControl className="selectSubsegmentContainer">
-          <InputLabel id="select-subsegment">Sub-Segment</InputLabel>
-          <Select
-            labelId="select-subsegment"
-            id="subsegment"
-            className="selectSubSegment"
-            label="Sub-Segment"
-            // multiple
-            value={selectedSubSegment}
-            onChange={handleChange}
-          >
-            {subSegments.map((subSegment) => {
-              return (
-                <MenuItem value={subSegment} key={subSegment}>
-                  {subSegment}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
-        <div className="Cagroutput">
-           <h3>
-            CAGR
-            <br />
-            {year.start} - {year.end}
-          </h3> 
-          <div className="pillContainer">
-            <div className="valuePill pillStyle">
-              <span>Value</span>
-              <span>{ValueCAGR}</span>
-            </div>
-            <div className="volumePill pillStyle">
-              <span>Volume</span>
-              <span>{VolumeCAGR}</span>
-            </div>
-          </div>
-        </div>
-      </div> */

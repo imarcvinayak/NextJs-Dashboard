@@ -15,8 +15,6 @@ function LineChart({
   chartTitle,
   showLabels,
   setshowLabels,
-  selectedLineChartCircle,
-  setselectedLineChartCircle,
 }) {
   useLayoutEffect(() => {
     if (!data) return;

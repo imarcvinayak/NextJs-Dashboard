@@ -6,6 +6,7 @@ import Footer from "./footer/Footer";
 import Header from "./header/Header";
 import CardValue from "./output/CardValue";
 import Data from "../data/data.json";
+import * as am5 from "@amcharts/amcharts5";
 import "./style.css";
 
 function ChartList() {
@@ -35,15 +36,14 @@ function ChartList() {
   const [forecastVolumeCAGR, setForecastVolumeCAGR] = useState(0);
   const [totalValueCAGR, setTotalValueCAGR] = useState(0);
   const [totalVolumeCAGR, setTotalVolumeCAGR] = useState(0);
+
+  const [colors, setColors] = useState([am5.color(6779356)]);
+  const [colorsArray, setColorsArrays] = useState([am5.color(6779356)]);
+
   let currentYear = new Date().getFullYear();
   let prevYear = new Date().getFullYear() - 1;
-
-  const [colors, setColors] = useState([]);
-  // const [selectedSubSegmentscolor, setSelectedSubSegmentscolor] = useState([]);
-  // console.log(colors);
-
-  function calculateCAGR(beginningValue, endingValue, numberOfYears) {
-    let cagr = Math.pow(endingValue / beginningValue, 1 / numberOfYears) - 1;
+  function calculateCAGR(beginingValue, endingValue, numberOfYears) {
+    let cagr = Math.pow(endingValue / beginingValue, 1 / numberOfYears) - 1;
     return (cagr * 100).toFixed(2) + "%";
   }
   const handleGlobalToggle = () => {
@@ -79,8 +79,6 @@ function ChartList() {
     const filteredData = Data.filter(
       (item) =>
         item["Report Name"] === "Global Pea Protein Market Report" &&
-        item.Year >= year.start &&
-        item.Year <= year.end &&
         item.Segment === segment &&
         (selectedSubSegments.length === 0 ||
           selectedSubSegments.includes(item["Sub-Segment"])) &&
@@ -147,14 +145,14 @@ function ChartList() {
       calculateCAGR(
         totalValueforMinYear,
         totalValueforMaxYear,
-        year.end - year.start
+        year.end - year.start ? year.end - year.start : 1
       )
     );
     setTotalVolumeCAGR(
       calculateCAGR(
         totalVolumeforMinYear,
         totalVolumeforMaxYear,
-        year.end - year.start
+        year.end - year.start ? year.end - year.start : 1
       )
     );
   }, [year, segment, selectedSubSegments, selectedSubSegment]);
@@ -175,6 +173,7 @@ function ChartList() {
         (selectedSubSegments.length === 0 ||
           selectedSubSegments.includes(item["Sub-Segment"]))
     );
+    // console.log(filteredData)
     const segmentList = [
       ...new Set(
         data.map((d) => {
@@ -196,12 +195,12 @@ function ChartList() {
 
   const chartTitle = {
     Value: {
-      pieChart: `Value distribution for ${year.end}`,
+      pieChart: `Value distribution for`,
       stackChart: "Value distribution (Millions US$)",
       lineChart: "Average Price Trend ($/MT)",
     },
     Volume: {
-      pieChart: `Volume distribution for ${year.end}`,
+      pieChart: `Volume distribution for`,
       stackChart: "Volume distribution for (KMT)",
       bubbleChart: "Opportunity Assessment",
     },
@@ -224,6 +223,11 @@ function ChartList() {
     setselectedLineChartCircle,
     colors,
     setColors,
+    isValueFieldEmpty,
+    isVolumeFieldEmpty,
+    setIsValueFieldEmpty,
+    setIsVolumeFieldEmpty,
+    colorsArray,
   };
 
   return (
@@ -241,6 +245,10 @@ function ChartList() {
         VolumeCAGR={totalVolumeCAGR}
         globalLabels={globalLabels}
         handleGlobalToggle={handleGlobalToggle}
+        prevYear={prevYear}
+        currentYear={currentYear}
+        isValueFieldEmpty={isValueFieldEmpty}
+        isVolumeFieldEmpty={isVolumeFieldEmpty}
       />
       <main className="main">
         <div className="cards">
@@ -292,20 +300,8 @@ function ChartList() {
           }
           style={{ marginLeft: "20px" }}
         >
-          {globalData && (
-            <ChartByValue
-              isValueFieldEmpty={isValueFieldEmpty}
-              setIsValueFieldEmpty={setIsValueFieldEmpty}
-              {...commonProps}
-            />
-          )}
-          {globalData && (
-            <ChartByVolume
-              isVolumeFieldEmpty={isVolumeFieldEmpty}
-              setIsVolumeFieldEmpty={setIsVolumeFieldEmpty}
-              {...commonProps}
-            />
-          )}
+          {globalData && <ChartByValue {...commonProps} />}
+          {globalData && <ChartByVolume {...commonProps} />}
         </div>
       </main>
       <Footer

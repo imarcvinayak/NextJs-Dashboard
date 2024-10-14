@@ -21,22 +21,19 @@ function ChartComponent({
   setselectedLineChartCircle,
   isValueFieldEmpty,
   setIsValueFieldEmpty,
+  isVolumeFieldEmpty,
   colors,
   setColors,
-
+  colorsArray,
 }) {
   const [globalData, setGlobalData] = useState();
-  // const width = "100%";
-  // const height = "230px";
 
   useEffect(() => {
     if (!data) return;
-    const isValueFieldEmpty = data.every(d=>d.Value === '')
-    setIsValueFieldEmpty(isValueFieldEmpty)
+    const isValueFieldEmpty = data.every((d) => d.Value === "");
+    setIsValueFieldEmpty(isValueFieldEmpty);
     setGlobalData(data);
-  }, [data,isValueFieldEmpty]);
-
-
+  }, [data, isValueFieldEmpty]);
 
   const commonProps = {
     globalData,
@@ -56,12 +53,18 @@ function ChartComponent({
     setselectedLineChartCircle,
     colors,
     setColors,
+    colorsArray,
   };
   return (
     <>
-      {!isValueFieldEmpty && <PieChart {...commonProps} yType={"Value"} />}
+      {!isValueFieldEmpty && (
+        <PieChart {...commonProps} yType={"Value"} showMaxYear={true} />
+      )}
       {!isValueFieldEmpty && <StackChart {...commonProps} yType={"Value"} />}
-      <LineChart data={globalData} {...commonProps} />
+      {isVolumeFieldEmpty && (
+        <PieChart {...commonProps} yType={"Value"} showMaxYear={false} />
+      )}
+      {!isVolumeFieldEmpty && <LineChart data={globalData} {...commonProps} />}
     </>
   );
 }

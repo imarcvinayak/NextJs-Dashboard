@@ -4,11 +4,8 @@ import Slider from "@mui/material/Slider";
 import "./style.css";
 
 function MySlider({ year, setyear }) {
-  // const [yearRange, setYearRange] = useState([2018, 2028]); // Default range
 
   const handleChange = (e) => {
-    // setYearRange(e.target.value); // Update state on slider change
-    // setyear(e.target.value);
     setyear({
       start: e.target.value[0],
       end: e.target.value[1],

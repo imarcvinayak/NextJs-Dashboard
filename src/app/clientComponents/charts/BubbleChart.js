@@ -21,8 +21,6 @@ function BubbleChart({
   setSelectedSubSegment,
   selectedSubSegments,
   chartTitle,
-  colors,
-  setColors,
 }) {
   useLayoutEffect(() => {
     if (!data) return;
@@ -58,10 +56,10 @@ function BubbleChart({
         subSegment: key,
         cagr: cagr,
         value: endingValue,
-        color: colors[i],
       });
       // return aggregatedData
     });
+    // console.log(aggregatedData);
 
     // const filterData = data.filter((d)=>d['Segment']==='Type')
 
@@ -148,12 +146,13 @@ function BubbleChart({
 
     let circleTemplate = Template.new({});
     // Set up circle bullets (bubbles)
-
+    let colorSet = am5.ColorSet.new(root, {});
     series.bullets.push((root, series, dataItem) => {
-      // console.log(dataItem);
+      const value = dataItem.get("valueY");
+      let radius = (value / 5) * 2 + 2;
       let bulletCircle = Circle.new(root, {
-        radius: 10,
-        fill: dataItem.dataContext.color,
+        radius: radius,
+        fill: colorSet.next(),
         fillOpacity: 1,
         tooltipText:
           "[bold]{subSegment}[/]\nValue: {valueX.formatNumber('#,###.')}\nCAGR: {valueY.formatNumber('#.#')}%",
@@ -182,7 +181,6 @@ function BubbleChart({
       // return am5.Bullet.new(root, { sprite: circle });
     });
 
-    // console.log();
     // console.log(am5.Color.brighten(colorset._settings.colors[0]._hex));
     series.set("heatRules", [
       {
@@ -214,7 +212,7 @@ function BubbleChart({
     return () => {
       root.dispose();
     };
-  }, [data, segment, selectedSubSegment, selectedSubSegments, colors]);
+  }, [data, segment, selectedSubSegment, selectedSubSegments]);
   return (
     <div>
       <h4 className="chartheader">{chartTitle["Volume"]["bubbleChart"]}</h4>

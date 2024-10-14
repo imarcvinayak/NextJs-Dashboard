@@ -22,11 +22,10 @@ function ChartComponent({
   setIsVolumeFieldEmpty,
   colors,
   setColors,
+  year,
+  colorsArray,
 }) {
   const [globalData, setGlobalData] = useState();
-  // const [isVolumeFieldEmpty, setIsVolumeFieldEmpty] = useState(false);
-  // const width = "100%";
-  // const height = "230px";
 
   useEffect(() => {
     if (!data) return;
@@ -51,10 +50,12 @@ function ChartComponent({
     setSelectedLineChartCircle,
     colors,
     setColors,
+    year,
+    colorsArray,
   };
   return (
     <>
-      {!isVolumeFieldEmpty && <PieChart {...commonProps} yType={"Volume"} />}
+      {!isVolumeFieldEmpty && <PieChart {...commonProps} yType={"Volume"} showMaxYear={true}/>}
       {!isVolumeFieldEmpty && <StackChart {...commonProps} yType={"Volume"} />}
       <BubbleChart {...commonProps} />
     </>

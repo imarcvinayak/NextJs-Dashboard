@@ -14,14 +14,15 @@ function PieChart({
   selectedSubSegments,
   yType,
   chartTitle,
-  setColors,
+  year,
+  showMaxYear,
 }) {
   useLayoutEffect(() => {
     if (!data) return;
     // const pieData = data.filter((d) => d["Segment"] === segment);
     const pieData = [...data];
 
-    const root = am5.Root.new(`${yType}pieChart`);
+    const root = am5.Root.new(`${showMaxYear ? yType : ""}pieChart`);
     root.setThemes([am5themes_Animated.new(root)]);
     const pieChart = root.container.children.push(
       am5percent.PieChart.new(root, {
@@ -43,7 +44,6 @@ function PieChart({
       oversizedBehavior: "wrap",
       fontSize: 10,
     });
-    setColors(series.get("colors")._settings.colors)
     // console.log(series.get("colors")._settings.colors)
 
     const processData = (data) => {
@@ -51,10 +51,12 @@ function PieChart({
 
       data.forEach((d) => {
         const key = d["Sub-Segment"];
-
         if (!agredatedata[key]) agredatedata[key] = 0;
-
-        agredatedata[key] += d[yType];
+        if (showMaxYear) {
+          if (d.Year === year.end) agredatedata[key] += d[yType];
+        } else {
+          if (d.Year === year.start) agredatedata[key] += d[yType];
+        }
       });
       return Object.keys(agredatedata).map((key) => ({
         category: key,
@@ -103,9 +105,13 @@ function PieChart({
 
   return (
     <div>
-      <h4 className="chartheader">{chartTitle[yType]["pieChart"]}</h4>
+      <h4 className="chartheader">
+        {chartTitle[yType]["pieChart"] +
+          " " +
+          (showMaxYear ? year.end : year.start)}
+      </h4>
       <div
-        id={yType + "pieChart"}
+        id={`${showMaxYear ? yType : ""}pieChart`}
         style={{ width: width, height: height }}
       ></div>
     </div>
