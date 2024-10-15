@@ -123,16 +123,16 @@ function Header({
         </FormControl>
       </div>
       <div className="flex-header-3 flex-header">
-        {/* <div className="colorContainer dropdown-container">
+        <div className="colorContainer dropdown-container" ref={dropDownRef}>
           <div
             className="dropdown-header"
-            style={{ backgroundColor: selectedColor || '#d1d9e2' }}
+            style={{ backgroundColor: selectedColor || "#d1d9e2" }}
             onClick={toggleDropDown}
           >
             {"Select Your Theme"}
           </div>
           {isOpen && (
-            <div id="optionsSelect" className="dropdown-menu" ref={dropDownRef}>
+            <div id="optionsSelect" className="dropdown-menu">
               {themes.map((theme, i) => {
                 return (
                   <button
@@ -148,7 +148,7 @@ function Header({
               })}
             </div>
           )}
-        </div> */}
+        </div>
         {/* <div className="colorContainer">
           <label htmlFor="color"> Select Your Theme</label>
           <input

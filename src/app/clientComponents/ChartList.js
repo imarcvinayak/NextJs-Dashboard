@@ -76,7 +76,7 @@ function ChartList() {
   }, []);
 
   useEffect(() => {
-    setColors([selectedColor ? selectedColor : "#67b7dc"]);
+    setColors([selectedColor ? selectedColor : am5.color(6779356)]);
   }, [selectedColor]);
 
   useEffect(() => {
