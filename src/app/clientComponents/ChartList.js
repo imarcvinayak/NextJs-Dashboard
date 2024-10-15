@@ -39,6 +39,7 @@ function ChartList() {
 
   const [colors, setColors] = useState([am5.color(6779356)]);
   const [colorsArray, setColorsArrays] = useState([am5.color(6779356)]);
+  const [selectedColor, setSelectedColor] = useState("");
 
   let currentYear = new Date().getFullYear();
   let prevYear = new Date().getFullYear() - 1;
@@ -73,6 +74,10 @@ function ChartList() {
       end: maxYear,
     });
   }, []);
+
+  useEffect(() => {
+    setColors([selectedColor ? selectedColor : "#67b7dc"]);
+  }, [selectedColor]);
 
   useEffect(() => {
     if (!Data) return;
@@ -210,6 +215,7 @@ function ChartList() {
     height: "232px",
     data: globalData,
     segment,
+    subSegments,
     selectedSubSegment,
     setSelectedSubSegment,
     selectedSubSegments,
@@ -249,6 +255,8 @@ function ChartList() {
         currentYear={currentYear}
         isValueFieldEmpty={isValueFieldEmpty}
         isVolumeFieldEmpty={isVolumeFieldEmpty}
+        selectedColor={selectedColor}
+        setSelectedColor={setSelectedColor}
       />
       <main className="main">
         <div className="cards">

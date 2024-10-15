@@ -11,16 +11,19 @@ import {
   Template,
 } from "@amcharts/amcharts5";
 import { XYCursor } from "@amcharts/amcharts5/xy";
+import { generateColorVariations } from "@/app/utils/Themes";
 
 function BubbleChart({
   globalData: data,
   width,
   height,
   segment,
+  subSegments,
   selectedSubSegment,
   setSelectedSubSegment,
   selectedSubSegments,
   chartTitle,
+  colors,
 }) {
   useLayoutEffect(() => {
     if (!data) return;
@@ -33,19 +36,20 @@ function BubbleChart({
       );
     else filteredBubbleChartData = data.filter((d) => d["Segment"] === segment);
 
+    let colorList = generateColorVariations(colors[0], subSegments.length);
     function calculateCagrValue(initialValue, endingValue, years) {
       return ((endingValue / initialValue) ** (1 / years) - 1) * 100;
     }
-    const subSegments = {};
+    const subSegmentsList = {};
     filteredBubbleChartData.forEach((d) => {
       const key = d["Sub-Segment"];
-      if (!subSegments[key]) subSegments[key] = [];
-      subSegments[key].push(d);
+      if (!subSegmentsList[key]) subSegmentsList[key] = [];
+      subSegmentsList[key].push(d);
     });
 
     const aggregatedData = [];
-    Object.keys(subSegments).forEach((key, i) => {
-      const item = subSegments[key];
+    Object.keys(subSegmentsList).forEach((key, i) => {
+      const item = subSegmentsList[key];
       const initialYear = Math.min(...item.map((d) => d["Year"]));
       const finalYear = Math.max(...item.map((d) => d["Year"]));
       const years = finalYear - initialYear;
@@ -56,6 +60,7 @@ function BubbleChart({
         subSegment: key,
         cagr: cagr,
         value: endingValue,
+        color: colorList[subSegments.findIndex(s=>s===key)]
       });
       // return aggregatedData
     });
@@ -145,14 +150,20 @@ function BubbleChart({
     // series.strokes.template.set("visible", false);
 
     let circleTemplate = Template.new({});
+
     // Set up circle bullets (bubbles)
-    let colorSet = am5.ColorSet.new(root, {});
+    // let colorSet = am5.ColorSet.new(root, {
+    //   colors: colorList,
+    // });
     series.bullets.push((root, series, dataItem) => {
       const value = dataItem.get("valueY");
+      // const index = subSegments.findIndex(
+      //   (s) => s === dataItem.dataContext.subSegment
+      // );
       let radius = (value / 5) * 2 + 2;
       let bulletCircle = Circle.new(root, {
         radius: radius,
-        fill: colorSet.next(),
+        fill: dataItem.dataContext.color,
         fillOpacity: 1,
         tooltipText:
           "[bold]{subSegment}[/]\nValue: {valueX.formatNumber('#,###.')}\nCAGR: {valueY.formatNumber('#.#')}%",
@@ -212,7 +223,13 @@ function BubbleChart({
     return () => {
       root.dispose();
     };
-  }, [data, segment, selectedSubSegment, selectedSubSegments]);
+  }, [
+    data,
+    segment,
+    selectedSubSegment,
+    selectedSubSegments,
+    colors,
+  ]);
   return (
     <div>
       <h4 className="chartheader">{chartTitle["Volume"]["bubbleChart"]}</h4>

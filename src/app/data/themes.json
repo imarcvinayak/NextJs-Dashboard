@@ -1,0 +1,39 @@
+{
+  "dark-pink": {
+    "hex": "#f285d9",
+    "rgb": "rgb(242, 133, 217)"
+  },
+  "darker-blue": {
+    "hex": "#689ef1",
+    "rgb": "rgb(104, 158, 241)"
+  },
+  "darker-green": {
+    "hex": "#41dd75",
+    "rgb": "rgb(65, 221, 117)"
+  },
+  "darker-cyan": {
+    "hex": "#41d6ea",
+    "rgb": "rgb(65, 214, 234)"
+  },
+  "darker-yellow": {
+    "hex": "#ffd269",
+    "rgb": "rgb(255, 210, 105)"
+  },
+
+  "darker-red": {
+    "hex": "#ff7b69",
+    "rgb": "rgb(255, 123, 105)"
+  },
+  "darker-brown": {
+    "hex": "#f5a96e",
+    "rgb": "rgb(245, 169, 110)"
+  },
+  "darker-purple": {
+    "hex": "#bf73ee",
+    "rgb": "rgb(191, 115, 238)"
+  },
+  "darker-pink": {
+    "hex": "#ff6dde",
+    "rgb": "rgb(255, 109, 222)"
+  }
+}

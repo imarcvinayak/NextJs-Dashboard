@@ -1,0 +1,25 @@
+{
+    "users": [
+      {
+        "username": "deep.pandey@imarcgroup.com",
+        "theme": "dark",
+        "icon": "./vi.jpg"
+      },
+      {
+        "username": "abhishek.verma@imarcgroup.com",
+        "theme": "light",
+        "icon": "./pepsi.jpg"
+      },
+      {
+        "username": "abhinav.takkar@imarcgroup.com",
+        "theme": "blue",
+        "icon": "./imarc_logo.jpg"
+      },
+      {
+        "username": "mehul.raj@imarcgroup.com",
+        "theme": "green",
+        "icon": "✨"
+      }
+    ]
+  }
+  

@@ -10,7 +10,8 @@ import {
   ListItemText,
 } from "@mui/material";
 import "./style.css";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { selectYourTheme } from "@/app/utils/Themes";
 // import Image from "next/image";
 
 function Header({
@@ -29,13 +30,35 @@ function Header({
   currentYear,
   isValueFieldEmpty,
   isVolumeFieldEmpty,
+  selectedColor,
+  setSelectedColor,
 }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const { themes, color } = selectYourTheme();
+  const dropDownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropDownRef.current && !dropDownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  const toggleDropDown = () => {
+    setIsOpen(!isOpen);
+  };
+  const handleSelectedColor = (color) => {
+    // setIsOpen(false)
+    setSelectedColor(selectedColor === color ? "" : color);
+  };
   const isAllSelected =
     subSegments.length > 0 && selectedSubSegments.length === subSegments.length;
-
   const handleChange = (e) => {
     const value = e.target.value;
-    console.log(value);
     if (value[value.length - 1] === "all") {
       setSelectedSubSegments(
         selectedSubSegments.length === subSegments.length ? [] : subSegments
@@ -45,6 +68,7 @@ function Header({
     setSelectedSubSegment("");
     setSelectedSubSegments(value);
   };
+
   return (
     <header className="mainheader">
       <div className="flex-header-1 flex-header">
@@ -99,6 +123,42 @@ function Header({
         </FormControl>
       </div>
       <div className="flex-header-3 flex-header">
+        {/* <div className="colorContainer dropdown-container">
+          <div
+            className="dropdown-header"
+            style={{ backgroundColor: selectedColor || '#d1d9e2' }}
+            onClick={toggleDropDown}
+          >
+            {"Select Your Theme"}
+          </div>
+          {isOpen && (
+            <div id="optionsSelect" className="dropdown-menu" ref={dropDownRef}>
+              {themes.map((theme, i) => {
+                return (
+                  <button
+                    key={theme}
+                    className={theme + " dropdown-item"}
+                    value={theme}
+                    style={{ backgroundColor: color[i].hex }}
+                    onClick={() => handleSelectedColor(color[i].hex)}
+                  >
+                    {selectedColor === color[i].hex && <span></span>}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div> */}
+        {/* <div className="colorContainer">
+          <label htmlFor="color"> Select Your Theme</label>
+          <input
+            id="color"
+            type="color"
+            value={selectedColor}
+            onChange={(e) => setSelectedColor(e.target.value)}
+          />
+        </div> */}
+
         <div className="pillContainer">
           {!isValueFieldEmpty && (
             <div className="valuePill pillStyle">

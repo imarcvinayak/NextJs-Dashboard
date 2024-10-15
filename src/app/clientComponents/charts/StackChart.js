@@ -3,6 +3,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import { Switch } from "@mui/material";
+import { generateColorVariations } from "@/app/utils/Themes";
 
 function StackChart({
   globalData: data,
@@ -16,13 +17,14 @@ function StackChart({
   chartTitle,
   showLabels,
   setshowLabels,
+  colors,
+  subSegments,
 }) {
   useLayoutEffect(() => {
     if (!data) return;
     //filter data
-    // let defaultData = data.filter((d) => d["Segment"] === segment);
     let defaultData = [...data];
-
+    let colorsList = generateColorVariations(colors[0], subSegments.length);
     const stackDummyData = {};
     defaultData.forEach((d) => {
       const key = d.Year.toString();
@@ -109,7 +111,7 @@ function StackChart({
     );
     yAxis.get("renderer").grid.template.setAll({ visible: false });
     //create series for each stack
-    function createSeries(name) {
+    function createSeries(name, color) {
       let series = chart.series.push(
         am5xy.ColumnSeries.new(root, {
           name: name,
@@ -118,6 +120,8 @@ function StackChart({
           valueYField: name,
           categoryXField: "key",
           stacked: true,
+          fill: color,
+          stroke: color,
         })
       );
       series.columns.template.setAll({
@@ -176,8 +180,11 @@ function StackChart({
       series.data.setAll(stackData);
       series.appear();
     }
-    [...new Set(defaultData.map((d) => d["Sub-Segment"]))].forEach((d) => {
-      createSeries(d);
+    // [...new Set(defaultData.map((d) => d["Sub-Segment"]))].forEach((d) => {
+    //   createSeries(d);
+    // });
+    subSegments.forEach((d, i) => {
+      createSeries(d, colorsList[i]);
     });
 
     xAxis.data.setAll(stackData);
@@ -193,6 +200,7 @@ function StackChart({
     selectedSubSegments,
     yType,
     showLabels[`stacked${yType}Labels`],
+    colors,
   ]);
 
   return (

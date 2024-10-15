@@ -60,3 +60,15 @@ footer {
   color: #ecf0f1;
   font-size: 16px;
 }
+/* .colorContainer {
+  display: flex;
+  gap: 10px;
+}
+.selectColor {
+  width: 20px;
+  height: 20px;
+  display: flex;
+}
+.colorContainer .selectColor {
+  color: black;
+} */
