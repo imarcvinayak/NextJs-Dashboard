@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import "./style.css";
 function ThemesMenu({
-  color,
+  // color,
   palettes,
   setColorsArrays,
-  colorsArray,
+  // colorsArray,
 }) {
     const dropDownRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);

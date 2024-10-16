@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { userList } from "../utils/UserList";
 import "./style.css";
 

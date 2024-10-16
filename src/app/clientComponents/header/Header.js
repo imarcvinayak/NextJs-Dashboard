@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import "./style.css";
 // import { useEffect, useRef, useState } from "react";
-import { selectYourTheme } from "@/app/utils/Themes";
+// import { selectYourTheme } from "@/app/utils/Themes";
 // import Image from "next/image";
 
 function Header({
@@ -32,12 +32,12 @@ function Header({
   isValueFieldEmpty,
   isVolumeFieldEmpty,
   selectedColor,
-  setSelectedColor,
+  // setSelectedColor,
   palettes,
   setColorsArrays,
   colorsArray,
 }) {
-  const { themes, color } = selectYourTheme();
+  // const { themes, color } = selectYourTheme();
   const isAllSelected =
     subSegments.length > 0 && selectedSubSegments.length === subSegments.length;
   const handleChange = (e) => {
