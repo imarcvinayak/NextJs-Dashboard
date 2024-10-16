@@ -3,7 +3,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import { Switch } from "@mui/material";
-import { generateColorVariations } from "@/app/utils/Themes";
+// import { generateColorVariations } from "@/app/utils/Themes";
 
 function StackChart({
   globalData: data,
@@ -17,14 +17,16 @@ function StackChart({
   chartTitle,
   showLabels,
   setshowLabels,
-  colors,
+  // colors,
   subSegments,
+  colorsArray,
 }) {
   useLayoutEffect(() => {
     if (!data) return;
     //filter data
     let defaultData = [...data];
-    let colorsList = generateColorVariations(colors[0], subSegments.length);
+    // let colorsList = generateColorVariations(colors[0], subSegments.length);
+    // console.log(colorsList);
     const stackDummyData = {};
     defaultData.forEach((d) => {
       const key = d.Year.toString();
@@ -38,7 +40,7 @@ function StackChart({
     });
     const stackData = Object.values(stackDummyData);
     stackData.map((d) => {
-      const key = d.key;
+      // const key = d.key;
       const subsegments = Object.keys(d).filter((d) => d !== "key");
       const total = subsegments.reduce((acc, cur) => (acc += d[cur]), 0);
 
@@ -112,6 +114,7 @@ function StackChart({
     yAxis.get("renderer").grid.template.setAll({ visible: false });
     //create series for each stack
     function createSeries(name, color) {
+      // console.log(am5.color(color));
       let series = chart.series.push(
         am5xy.ColumnSeries.new(root, {
           name: name,
@@ -120,8 +123,8 @@ function StackChart({
           valueYField: name,
           categoryXField: "key",
           stacked: true,
-          fill: color,
-          stroke: color,
+          fill: am5.color(color),
+          stroke: am5.color(color),
         })
       );
       series.columns.template.setAll({
@@ -184,9 +187,8 @@ function StackChart({
     //   createSeries(d);
     // });
     subSegments.forEach((d, i) => {
-      createSeries(d, colorsList[i]);
+      createSeries(d, colorsArray[i > 4 ? 4 : i]);
     });
-
     xAxis.data.setAll(stackData);
     chart.appear(1000, 100);
     root._logo.dispose();
@@ -200,7 +202,7 @@ function StackChart({
     selectedSubSegments,
     yType,
     showLabels[`stacked${yType}Labels`],
-    colors,
+    colorsArray,
   ]);
 
   return (

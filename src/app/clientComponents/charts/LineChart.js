@@ -15,7 +15,8 @@ function LineChart({
   chartTitle,
   showLabels,
   setshowLabels,
-  colors,
+  // colors,
+  colorsArray,
 }) {
   useLayoutEffect(() => {
     if (!data) return;
@@ -116,11 +117,11 @@ function LineChart({
 
     series.bullets.push(function (root, s, dataItem) {
       let container = am5.Container.new(root, {});
-      let circle = container.children.push(
+      container.children.push(
         am5.Circle.new(root, {
           radius: 5,
           // fill: "#1976d2",
-          fill: colors[0],
+          fill: colorsArray[0],
           stroke: root.interfaceColors.get("alternativeBackground"),
           strokeWidth: 2,
         })
@@ -163,7 +164,7 @@ function LineChart({
     selectedSubSegment,
     selectedSubSegments,
     showLabels[`lineLabels`],
-    colors,
+    colorsArray,
   ]);
   return (
     <div>

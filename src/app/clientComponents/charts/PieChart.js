@@ -1,7 +1,4 @@
-import {
-  generateColorVariations,
-  generateColorVariations1,
-} from "@/app/utils/Themes";
+// import { generateColorVariations } from "@/app/utils/Themes";
 import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
@@ -12,7 +9,7 @@ function PieChart({
   width,
   height,
   segment,
-  subSegments,
+  // subSegments,
   selectedSubSegment,
   setSelectedSubSegment,
   selectedSubSegments,
@@ -20,14 +17,14 @@ function PieChart({
   chartTitle,
   year,
   showMaxYear,
-  colors,
+  // colors,
+  colorsArray,
 }) {
   useLayoutEffect(() => {
     if (!data) return;
     // const pieData = data.filter((d) => d["Segment"] === segment);
     const pieData = [...data];
-    let colorsList = generateColorVariations(colors[0], subSegments.length);
-    // let colorsList = generateColorVariations1(colors, subSegments.length);
+    // let colorsList = generateColorVariations(colors[0], subSegments.length);
     const root = am5.Root.new(`${showMaxYear ? yType : ""}pieChart`);
     root.setThemes([am5themes_Animated.new(root)]);
     const pieChart = root.container.children.push(
@@ -89,7 +86,7 @@ function PieChart({
       }
     );
     const color = [];
-    colorsList.forEach((c) => color.push(am5.color(c)));
+    colorsArray.forEach((c) => color.push(am5.color(c)));
     series.get("colors").set("colors", color);
 
     series.slices.template.adapters.add(
@@ -110,7 +107,14 @@ function PieChart({
     return () => {
       root.dispose();
     };
-  }, [data, segment, selectedSubSegments, selectedSubSegment, yType, colors]);
+  }, [
+    data,
+    segment,
+    selectedSubSegments,
+    selectedSubSegment,
+    yType,
+    colorsArray,
+  ]);
 
   return (
     <div>

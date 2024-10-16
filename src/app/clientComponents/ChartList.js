@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import ChartByValue from "./value/ChartComponent";
 import ChartByVolume from "./volume/ChartComponent";
 import Footer from "./footer/Footer";
@@ -8,8 +8,10 @@ import CardValue from "./output/CardValue";
 import Data from "../data/data.json";
 import * as am5 from "@amcharts/amcharts5";
 import "./style.css";
+import { palette } from "../utils/Themes";
 
-function ChartList() {
+function ChartList({ colors, setColors, initialtheme }) {
+  const palettes = palette();
   const [globalData, setGlobalData] = useState();
   const [showLabels, setshowLabels] = useState({
     stackedValueLabels: false,
@@ -37,9 +39,10 @@ function ChartList() {
   const [totalValueCAGR, setTotalValueCAGR] = useState(0);
   const [totalVolumeCAGR, setTotalVolumeCAGR] = useState(0);
 
-  const [colors, setColors] = useState([am5.color(6779356)]);
-  const [colorsArray, setColorsArrays] = useState([am5.color(6779356)]);
+  const [colorsArray, setColorsArrays] = useState(palettes[0]["arr"]);
   const [selectedColor, setSelectedColor] = useState("");
+  const [minYear, setMinYear] = useState(0);
+  const [maxYear, setMaxYear] = useState(0);
 
   let currentYear = new Date().getFullYear();
   let prevYear = new Date().getFullYear() - 1;
@@ -73,11 +76,74 @@ function ChartList() {
       start: minYear,
       end: maxYear,
     });
+    setMinYear(minYear);
+    setMaxYear(maxYear);
   }, []);
 
   useEffect(() => {
-    setColors([selectedColor ? selectedColor : am5.color(6779356)]);
+    setColors([selectedColor ? selectedColor : initialtheme]);
   }, [selectedColor]);
+
+  useLayoutEffect(() => {
+    if (!Data) return;
+    const filteredData = Data.filter(
+      (item) =>
+        item["Report Name"] === "Global Pea Protein Market Report" &&
+        item.Segment === segment &&
+        (selectedSubSegments.length === 0 ||
+          selectedSubSegments.includes(item["Sub-Segment"])) &&
+        (!selectedSubSegment.length ||
+          selectedSubSegment === item["Sub-Segment"])
+    );
+    let totalValueforMinYear = 0;
+    let totalValueforMaxYear = 0;
+    let totalVolumeforMinYear = 0;
+    let totalVolumeforMaxYear = 0;
+    let currentYearValue = 0;
+    let currentYearVolume = 0;
+    let prevYearValue = 0;
+    let prevYearVolume = 0;
+
+    filteredData.forEach((d) => {
+      if (d.Year === minYear) {
+        totalValueforMinYear += d.Value || 0;
+        totalVolumeforMinYear += Number(d.Volume) || 0;
+      }
+      if (d.Year === maxYear) {
+        totalValueforMaxYear += d.Value || 0;
+        totalVolumeforMaxYear += Number(d.Volume) || 0;
+      }
+      if (d.Year === currentYear) {
+        currentYearValue += d.Value || 0;
+        currentYearVolume += Number(d.Volume) || 0;
+      }
+      if (d.Year === prevYear) {
+        prevYearValue += d.Value || 0;
+        prevYearVolume += Number(d.Volume) || 0;
+      }
+    });
+
+    setHistoricalValueCAGR(
+      calculateCAGR(totalValueforMinYear, prevYearValue, prevYear - minYear)
+    );
+    setForecastValueCAGR(
+      calculateCAGR(
+        currentYearValue,
+        totalValueforMaxYear,
+        maxYear - currentYear
+      )
+    );
+    setHistoricalVolumeCAGR(
+      calculateCAGR(totalVolumeforMinYear, prevYearVolume, prevYear - minYear)
+    );
+    setForecastVolumeCAGR(
+      calculateCAGR(
+        currentYearVolume,
+        totalVolumeforMaxYear,
+        maxYear - currentYear
+      )
+    );
+  }, [minYear, maxYear, segment, selectedSubSegments, selectedSubSegment]);
 
   useEffect(() => {
     if (!Data) return;
@@ -90,6 +156,7 @@ function ChartList() {
         (!selectedSubSegment.length ||
           selectedSubSegment === item["Sub-Segment"])
     );
+
     let totalValueforMinYear = 0;
     let totalValueforMaxYear = 0;
     let totalVolumeforMinYear = 0;
@@ -117,35 +184,6 @@ function ChartList() {
         prevYearVolume += Number(d.Volume) || 0;
       }
     });
-
-    setHistoricalValueCAGR(
-      calculateCAGR(
-        totalValueforMinYear,
-        prevYearValue,
-        prevYear !== year.start ? prevYear - year.start : 1
-      )
-    );
-    setForecastValueCAGR(
-      calculateCAGR(
-        currentYearValue,
-        totalValueforMaxYear,
-        year.end !== currentYear ? year.end - currentYear : 1
-      )
-    );
-    setHistoricalVolumeCAGR(
-      calculateCAGR(
-        totalVolumeforMinYear,
-        prevYearVolume,
-        prevYear !== year.start ? prevYear - year.start : 1
-      )
-    );
-    setForecastVolumeCAGR(
-      calculateCAGR(
-        currentYearVolume,
-        totalVolumeforMaxYear,
-        year.end !== currentYear ? year.end - currentYear : 1
-      )
-    );
     setTotalValueCAGR(
       calculateCAGR(
         totalValueforMinYear,
@@ -234,6 +272,7 @@ function ChartList() {
     setIsValueFieldEmpty,
     setIsVolumeFieldEmpty,
     colorsArray,
+    setColorsArrays,
   };
 
   return (
@@ -257,6 +296,9 @@ function ChartList() {
         isVolumeFieldEmpty={isVolumeFieldEmpty}
         selectedColor={selectedColor}
         setSelectedColor={setSelectedColor}
+        palettes={palettes}
+        colorsArray={colorsArray}
+        setColorsArrays={setColorsArrays}
       />
       <main className="main">
         <div className="cards">
@@ -266,17 +308,15 @@ function ChartList() {
                 h3="Historical Value"
                 p={"CAGR"}
                 h2={historicalValueCAGR}
-                span={
-                  year.start +
-                  " - " +
-                  (prevYear < year.end ? prevYear : year.end)
-                }
+                span={minYear + " - " + prevYear}
+                backgroundColor={selectedColor || "#2c3e50"}
               />
               <CardValue
                 h3="Forecast Value"
                 p={"CAGR"}
                 h2={forecastValueCAGR}
-                span={currentYear + " - " + year.end}
+                span={currentYear + " - " + maxYear}
+                backgroundColor={selectedColor || "#2c3e50"}
               />
             </>
           ) : null}
@@ -286,17 +326,15 @@ function ChartList() {
                 h3="Historical Volume"
                 p={"CAGR"}
                 h2={historicalvolumeCAGR}
-                span={
-                  year.start +
-                  " - " +
-                  (prevYear < year.end ? prevYear : year.end)
-                }
+                span={minYear + " - " + prevYear}
+                backgroundColor={selectedColor || "#2c3e50"}
               />
               <CardValue
                 h3="Forecast Volume"
                 p={"CAGR"}
                 h2={forecastVolumeCAGR}
-                span={currentYear + " - " + year.end}
+                span={currentYear + " - " + maxYear}
+                backgroundColor={selectedColor || "#2c3e50"}
               />
             </>
           ) : null}
@@ -350,3 +388,34 @@ export default ChartList;
 // <div>
 //  {chartComponents[chartList[chartOption]]}
 // </div>
+
+{
+  // setHistoricalValueCAGR(
+  //   calculateCAGR(
+  //     totalValueforMinYear,
+  //     prevYearValue,
+  //     prevYear !== year.start ? prevYear - year.start : 1
+  //   )
+  // );
+  // setForecastValueCAGR(
+  //   calculateCAGR(
+  //     currentYearValue,
+  //     totalValueforMaxYear,
+  //     year.end !== currentYear ? year.end - currentYear : 1
+  //   )
+  // );
+  // setHistoricalVolumeCAGR(
+  //   calculateCAGR(
+  //     totalVolumeforMinYear,
+  //     prevYearVolume,
+  //     prevYear !== year.start ? prevYear - year.start : 1
+  //   )
+  // );
+  // setForecastVolumeCAGR(
+  //   calculateCAGR(
+  //     currentYearVolume,
+  //     totalVolumeforMaxYear,
+  //     year.end !== currentYear ? year.end - currentYear : 1
+  //   )
+  // );
+}

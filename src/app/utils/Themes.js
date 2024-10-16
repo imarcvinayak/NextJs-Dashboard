@@ -1,5 +1,5 @@
-import { users } from "../data/userList.json";
 import themesData from "../data/themes.json";
+import themes from '../data/themesPalette.json'
 import * as am5 from "@amcharts/amcharts5";
 
 export function theme() {
@@ -19,8 +19,14 @@ export function selectYourTheme() {
 
 export function generateColorVariations(baseColor, length) {
   let colors = [];
-  for (let i = 0; i < length + 10; i++) {
+  for (let i = 0; i < length; i++) {
     colors.push(am5.color(am5.Color.brighten(am5.color(baseColor), i * 0.9)));
   }
   return colors;
+}
+
+export function palette() {
+    const palettes = themes.themes
+
+    return palettes;
 }

@@ -26,6 +26,7 @@ function ChartComponent({
   colors,
   setColors,
   colorsArray,
+  setColorsArrays,
 }) {
   const [globalData, setGlobalData] = useState();
 
@@ -56,6 +57,7 @@ function ChartComponent({
     colors,
     setColors,
     colorsArray,
+    setColorsArrays,
   };
   return (
     <>

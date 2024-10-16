@@ -1,7 +1,7 @@
 import "./style.css";
-function CardValue({ h3, p, h2, span }) {
+function CardValue({ h3, p, h2, span,backgroundColor }) {
   return (
-    <div className="card">
+    <div className="card" style={{backgroundColor:backgroundColor}}>
       <div className="card-content">
         <h3>{h3}</h3>
         <p>{p}</p>

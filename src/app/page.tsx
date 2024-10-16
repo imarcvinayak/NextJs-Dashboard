@@ -1,10 +1,10 @@
 // import Image from "next/image";
-import ChartList from "./clientComponents/ChartList";
+import AppComponent from "./appcomponent/AppComponent";
 
 export default function Home() {
   return (
     <div>
-      <ChartList />
+      <AppComponent />
     </div>
   );
 }

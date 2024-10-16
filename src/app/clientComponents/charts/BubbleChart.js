@@ -11,7 +11,7 @@ import {
   Template,
 } from "@amcharts/amcharts5";
 import { XYCursor } from "@amcharts/amcharts5/xy";
-import { generateColorVariations } from "@/app/utils/Themes";
+// import { generateColorVariations } from "@/app/utils/Themes";
 
 function BubbleChart({
   globalData: data,
@@ -23,7 +23,8 @@ function BubbleChart({
   setSelectedSubSegment,
   selectedSubSegments,
   chartTitle,
-  colors,
+  // colors,
+  colorsArray
 }) {
   useLayoutEffect(() => {
     if (!data) return;
@@ -36,7 +37,7 @@ function BubbleChart({
       );
     else filteredBubbleChartData = data.filter((d) => d["Segment"] === segment);
 
-    let colorList = generateColorVariations(colors[0], subSegments.length);
+    // let colorList = generateColorVariations(colors[0], subSegments.length);
     function calculateCagrValue(initialValue, endingValue, years) {
       return ((endingValue / initialValue) ** (1 / years) - 1) * 100;
     }
@@ -48,7 +49,7 @@ function BubbleChart({
     });
 
     const aggregatedData = [];
-    Object.keys(subSegmentsList).forEach((key, i) => {
+    Object.keys(subSegmentsList).forEach((key) => {
       const item = subSegmentsList[key];
       const initialYear = Math.min(...item.map((d) => d["Year"]));
       const finalYear = Math.max(...item.map((d) => d["Year"]));
@@ -60,7 +61,7 @@ function BubbleChart({
         subSegment: key,
         cagr: cagr,
         value: endingValue,
-        color: colorList[subSegments.findIndex(s=>s===key)]
+        color: colorsArray[subSegments.findIndex(s=>s===key)]
       });
       // return aggregatedData
     });
@@ -228,7 +229,7 @@ function BubbleChart({
     segment,
     selectedSubSegment,
     selectedSubSegments,
-    colors,
+    colorsArray,
   ]);
   return (
     <div>
