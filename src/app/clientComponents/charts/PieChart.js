@@ -66,7 +66,6 @@ function PieChart({
         value: agredatedata[key],
       }));
     };
-
     //adding events on pie Chart
     series.slices.template.events.on("click", (event) => {
       const dataItem = event.target.dataItem;
@@ -85,9 +84,11 @@ function PieChart({
           : 0.3;
       }
     );
-    const color = [];
-    colorsArray.forEach((c) => color.push(am5.color(c)));
-    series.get("colors").set("colors", color);
+    if (colorsArray) {
+      const color = [];
+      colorsArray.forEach((c) => color.push(am5.color(c)));
+      series.get("colors").set("colors", color);
+    }
 
     series.slices.template.adapters.add(
       "strokeOpacity",

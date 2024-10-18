@@ -121,7 +121,7 @@ function LineChart({
         am5.Circle.new(root, {
           radius: 5,
           // fill: "#1976d2",
-          fill: colorsArray[0],
+          fill: colorsArray ? colorsArray[0] : "#1976d2",
           stroke: root.interfaceColors.get("alternativeBackground"),
           strokeWidth: 2,
         })

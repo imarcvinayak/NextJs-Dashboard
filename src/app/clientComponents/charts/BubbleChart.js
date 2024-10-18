@@ -24,7 +24,7 @@ function BubbleChart({
   selectedSubSegments,
   chartTitle,
   // colors,
-  colorsArray
+  colorsArray,
 }) {
   useLayoutEffect(() => {
     if (!data) return;
@@ -61,7 +61,7 @@ function BubbleChart({
         subSegment: key,
         cagr: cagr,
         value: endingValue,
-        color: colorsArray[subSegments.findIndex(s=>s===key)]
+        color: colorsArray[subSegments.findIndex((s) => s === key)],
       });
       // return aggregatedData
     });
@@ -83,6 +83,9 @@ function BubbleChart({
         wheelY: "zoomXY",
         pinchZoomX: true,
         pinchZoomY: true,
+        paddingBottom: 0,
+        paddingLeft: 0,
+        paddingRight: 30,
       })
     );
 
@@ -104,7 +107,7 @@ function BubbleChart({
     );
     xAxis.get("renderer").labels.template.setAll({
       fontSize: 12, // Set the font size for x-axis labels
-      // rotation: -35,
+      rotation: -35,
     });
     xAxis.get("renderer").grid.template.setAll({ visible: false });
 
@@ -161,15 +164,15 @@ function BubbleChart({
       // const index = subSegments.findIndex(
       //   (s) => s === dataItem.dataContext.subSegment
       // );
+      const color = dataItem.dataContext.color;
       let radius = (value / 5) * 2 + 2;
       let bulletCircle = Circle.new(root, {
         radius: radius,
-        fill: dataItem.dataContext.color,
+        fill: color,
         fillOpacity: 1,
         tooltipText:
           "[bold]{subSegment}[/]\nValue: {valueX.formatNumber('#,###.')}\nCAGR: {valueY.formatNumber('#.#')}%",
-        // tooltipPosition: "pointer",
-        tooltipPointerOrientation: "vertical",
+        tooltipY: am5.percent(40),
       });
 
       bulletCircle.events.on("click", (event) => {
@@ -224,13 +227,7 @@ function BubbleChart({
     return () => {
       root.dispose();
     };
-  }, [
-    data,
-    segment,
-    selectedSubSegment,
-    selectedSubSegments,
-    colorsArray,
-  ]);
+  }, [data, segment, selectedSubSegment, selectedSubSegments, colorsArray]);
   return (
     <div>
       <h4 className="chartheader">{chartTitle["Volume"]["bubbleChart"]}</h4>

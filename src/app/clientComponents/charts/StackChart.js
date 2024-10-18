@@ -40,13 +40,12 @@ function StackChart({
     });
     const stackData = Object.values(stackDummyData);
     stackData.map((d) => {
-      // const key = d.key;
       const subsegments = Object.keys(d).filter((d) => d !== "key");
+      subsegments.forEach((s) => (d[s] = parseFloat(d[s].toFixed(2))));
       const total = subsegments.reduce((acc, cur) => (acc += d[cur]), 0);
 
       return (d["total"] = total.toFixed(2));
     });
-
     //create root
     let root = am5.Root.new(`${yType}stackChart`);
 
@@ -115,6 +114,13 @@ function StackChart({
     //create series for each stack
     function createSeries(name, color) {
       // console.log(am5.color(color));
+      let obj = {};
+      if (color) {
+        obj = {
+          fill: am5.color(color),
+          stroke: am5.color(color),
+        };
+      }
       let series = chart.series.push(
         am5xy.ColumnSeries.new(root, {
           name: name,
@@ -123,8 +129,7 @@ function StackChart({
           valueYField: name,
           categoryXField: "key",
           stacked: true,
-          fill: am5.color(color),
-          stroke: am5.color(color),
+          ...obj,
         })
       );
       series.columns.template.setAll({
@@ -187,7 +192,8 @@ function StackChart({
     //   createSeries(d);
     // });
     subSegments.forEach((d, i) => {
-      createSeries(d, colorsArray[i > 4 ? 4 : i]);
+      if (colorsArray) createSeries(d, colorsArray[i > 4 ? 4 : i]);
+      else createSeries(d, "");
     });
     xAxis.data.setAll(stackData);
     chart.appear(1000, 100);

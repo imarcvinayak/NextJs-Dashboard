@@ -83,6 +83,11 @@ function ChartList({ colors, setColors, initialtheme }) {
   useEffect(() => {
     setColors([selectedColor ? selectedColor : initialtheme]);
   }, [selectedColor]);
+  useEffect(() => {
+    if (Object.values(showLabels).every((l) => l === true))
+      setGlobalLabels(true);
+    else setGlobalLabels(false);
+  }, [showLabels]);
 
   useLayoutEffect(() => {
     if (!Data) return;

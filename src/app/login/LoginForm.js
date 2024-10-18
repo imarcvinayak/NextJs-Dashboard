@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { userList } from "../utils/UserList";
 import "./style.css";
 
@@ -20,8 +21,8 @@ function LoginForm({ setIsLogin, setUser, initialtheme }) {
       themePalette: [initialtheme],
     });
     if (user) {
-      setIsLogin(true);
       localStorage.setItem("LOGGED_IN", JSON.stringify(user));
+      setIsLogin(true);
     }
   }
   return (

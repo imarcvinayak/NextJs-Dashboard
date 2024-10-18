@@ -64,7 +64,9 @@ function ChartComponent({
       {!isValueFieldEmpty && (
         <PieChart {...commonProps} yType={"Value"} showMaxYear={true} />
       )}
-      {!isValueFieldEmpty && <StackChart {...commonProps} yType={"Value"} />}
+      {!isValueFieldEmpty && (
+        <StackChart {...commonProps} yType={"Value"} />
+      )}
       {isVolumeFieldEmpty && (
         <PieChart {...commonProps} yType={"Value"} showMaxYear={false} />
       )}

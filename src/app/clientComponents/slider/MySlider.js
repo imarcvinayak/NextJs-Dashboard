@@ -4,7 +4,6 @@ import Slider from "@mui/material/Slider";
 import "./style.css";
 
 function MySlider({ year, setyear }) {
-
   const handleChange = (e) => {
     setyear({
       start: e.target.value[0],
@@ -32,11 +31,13 @@ function MySlider({ year, setyear }) {
         <input
           type="text"
           value={year.start}
+          disabled
           onChange={(e) => handleInputChange(e, "start")}
         />
         <input
           type="text"
           value={year.end}
+          disabled
           onChange={(e) => handleInputChange(e, "end")}
         />
       </div>
