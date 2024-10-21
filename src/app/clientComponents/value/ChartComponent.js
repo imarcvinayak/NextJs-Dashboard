@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import PieChart from "../charts/PieChart";
-import LineChart from "../charts/LineChart";
-import StackChart from "../charts/StackChart";
+import React, { useEffect, useState } from "react";
+import EPieChart from "../anotherlibrarycharts/charts/PieChart";
+import EStackChart from "../anotherlibrarycharts/charts/StackChart";
+import ELineChart from "../anotherlibrarycharts/charts/LineChart";
 
 function ChartComponent({
   data,
@@ -62,17 +62,22 @@ function ChartComponent({
   return (
     <>
       {!isValueFieldEmpty && (
-        <PieChart {...commonProps} yType={"Value"} showMaxYear={true} />
+        // <PieChart {...commonProps} yType={"Value"} showMaxYear={true} />
+        <EPieChart {...commonProps} yType={"Value"} showMaxYear={true} />
       )}
       {!isValueFieldEmpty && (
-        <StackChart {...commonProps} yType={"Value"} />
+        // <StackChart {...commonProps} yType={"Value"} />
+        <EStackChart {...commonProps} yType={"Value"} />
       )}
       {isVolumeFieldEmpty && (
-        <PieChart {...commonProps} yType={"Value"} showMaxYear={false} />
+        <EPieChart {...commonProps} yType={"Value"} showMaxYear={false} />
       )}
-      {!isVolumeFieldEmpty && <LineChart data={globalData} {...commonProps} />}
+      {(!isVolumeFieldEmpty || isValueFieldEmpty) && (
+        // <LineChart data={globalData} {...commonProps} />
+        <ELineChart data={globalData} {...commonProps} />
+      )}
     </>
   );
 }
 
-export default ChartComponent;
+export default React.memo(ChartComponent);

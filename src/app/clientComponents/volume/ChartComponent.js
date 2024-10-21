@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import PieChart from "../charts/PieChart";
-import StackChart from "../charts/StackChart";
-import BubbleChart from "../charts/BubbleChart";
+import React, { useEffect, useState } from "react";
+import EPieChart from "../anotherlibrarycharts/charts/PieChart";
+import EStackChart from "../anotherlibrarycharts/charts/StackChart";
+import EBubbleChart from "../anotherlibrarycharts/charts/BubbleChart";
 
 function ChartComponent({
   data,
@@ -59,11 +59,14 @@ function ChartComponent({
   };
   return (
     <>
-      {!isVolumeFieldEmpty && <PieChart {...commonProps} yType={"Volume"} showMaxYear={true}/>}
-      {!isVolumeFieldEmpty && <StackChart {...commonProps} yType={"Volume"} />}
-      <BubbleChart {...commonProps} />
+      {!isVolumeFieldEmpty && (
+        <EPieChart {...commonProps} yType={"Volume"} showMaxYear={true} />
+      )}
+      {!isVolumeFieldEmpty && <EStackChart {...commonProps} yType={"Volume"} />}
+      {/* <BubbleChart {...commonProps} /> */}
+      <EBubbleChart {...commonProps} />
     </>
   );
 }
 
-export default ChartComponent;
+export default React.memo(ChartComponent);
