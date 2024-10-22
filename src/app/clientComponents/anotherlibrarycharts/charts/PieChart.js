@@ -52,7 +52,7 @@ function PieChart({
     // segment,
     // selectedSubSegments,
     // selectedSubSegment,
-    // // yType,
+    // yType,
     // colorsArray,
   ]);
 

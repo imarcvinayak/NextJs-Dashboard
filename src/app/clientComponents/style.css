@@ -11,6 +11,7 @@
   width: 82%;
   text-align: center;
   justify-content: right;
+  transition: all 0.5s ease; 
 }
 .DistributionCharList > div {
   height: max-content;

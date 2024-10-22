@@ -72,7 +72,7 @@ function ChartComponent({
       {isVolumeFieldEmpty && (
         <EPieChart {...commonProps} yType={"Value"} showMaxYear={false} />
       )}
-      {(!isVolumeFieldEmpty || isValueFieldEmpty) && (
+      {!(isVolumeFieldEmpty || isValueFieldEmpty) && (
         // <LineChart data={globalData} {...commonProps} />
         <ELineChart data={globalData} {...commonProps} />
       )}
