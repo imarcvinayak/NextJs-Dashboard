@@ -11,7 +11,7 @@ function BubbleChart({
   subSegments,
   selectedSubSegment,
   setSelectedSubSegment,
-  selectedSubSegments,
+  // selectedSubSegments,
   chartTitle,
   // colors,
   colorsArray,
@@ -73,15 +73,12 @@ function BubbleChart({
         };
       })
     );
-  }, [
-    data,
-    //  segment, selectedSubSegment, selectedSubSegments, colorsArray
-  ]);
+  }, [data]);
   useEffect(() => {
     setShouldRenderChart(false);
     const timer = setTimeout(() => {
       setShouldRenderChart(true); // Set state to true after delay
-    }); // 3000ms delay (3 seconds)
+    });
 
     return () => clearTimeout(timer); // Clean up the timer on unmount
   }, [segment]);
@@ -116,7 +113,6 @@ function BubbleChart({
         fontSize: 14, // Customize the x-axis title font size
         color: "#333", // Customize the x-axis title color
       },
-      // boundaryGap: [0.9, 0],
       type: "value",
       splitLine: {
         show: false,
@@ -174,8 +170,6 @@ function BubbleChart({
     ],
   };
   const onChartClick = (params) => {
-    // alert(`You clicked on: ${params.name}, Value: ${params.value}`);
-    // console.log(params);
     setSelectedSubSegment(!selectedSubSegment ? params.name : "");
   };
   return (
@@ -212,3 +206,5 @@ export default BubbleChart;
 //     Math.min(...EbubbleData.map((d) => d.value[0])) /
 //       Math.pow(10, Math.floor(Math.log10(Math.min(...EbubbleData.map((d) => d.value[0])))))
 //   ) * Math.pow(10, Math.floor(Math.log10(Math.min(...EbubbleData.map((d) => d.value[0]))))),
+
+//useLayout previous dependencies: segment, selectedSubSegment, selectedSubSegments, colorsArray

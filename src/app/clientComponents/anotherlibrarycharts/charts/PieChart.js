@@ -5,11 +5,11 @@ function PieChart({
   globalData: data,
   width,
   height,
-  segment,
+  // segment,
   // subSegments,
   selectedSubSegment,
   setSelectedSubSegment,
-  selectedSubSegments,
+  // selectedSubSegments,
   yType,
   chartTitle,
   year,
@@ -19,6 +19,7 @@ function PieChart({
 }) {
   // console.log(data, "dd");
   const [EpieData, setEpieData] = useState([]);
+  const [option, setOption] = useState();
   useLayoutEffect(() => {
     if (!data) return;
     const pieData = [...data];
@@ -49,11 +50,6 @@ function PieChart({
     setEpieData(processData(pieData));
   }, [
     data,
-    // segment,
-    // selectedSubSegments,
-    // selectedSubSegment,
-    // yType,
-    // colorsArray,
   ]);
 
   const onChartClick = (params) => {
@@ -101,10 +97,7 @@ function PieChart({
           " " +
           (showMaxYear ? year.end : year.start)}
       </h4>
-      {/* <div
-        id={`${showMaxYear ? yType : ""}pieChart`}
-        style={{ width: width, height: height }}
-      ></div> */}
+
       <div style={{ height: height, width: width }}>
         <ReactECharts
           option={getOption()}
@@ -117,3 +110,10 @@ function PieChart({
 }
 
 export default React.memo(PieChart);
+
+//uselayout Effect previous dependencies :      segment, selectedSubSegments, selectedSubSegment, yType, colorsArray,
+
+/* <div
+        id={`${showMaxYear ? yType : ""}pieChart`}
+        style={{ width: width, height: height }}
+      ></div> */

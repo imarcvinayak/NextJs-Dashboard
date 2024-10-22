@@ -9,7 +9,7 @@ function StackChart({
   segment,
   selectedSubSegment,
   setSelectedSubSegment,
-  selectedSubSegments,
+  // selectedSubSegments,
   yType,
   chartTitle,
   showLabels,
@@ -63,20 +63,12 @@ function StackChart({
       xAxisData: xAxisData,
       stackData: estackData,
     });
-  }, [
-    data,
-    // segment,
-    // selectedSubSegment,
-    // selectedSubSegments,
-    // yType,
-    // showLabels[`stacked${yType}Labels`],
-    // colorsArray,
-  ]);
+  }, [data]);
   useEffect(() => {
     setShouldRenderChart(false);
     const timer = setTimeout(() => {
       setShouldRenderChart(true); // Set state to true after delay
-    }); // 3000ms delay (3 seconds)
+    });
 
     return () => clearTimeout(timer); // Clean up the timer on unmount
   }, [segment]);
@@ -88,7 +80,9 @@ function StackChart({
       stack: "Total",
       barWidth: "80%",
       label: {
-        show: showLabels[`stacked${yType}Labels`],
+        show:
+          showLabels[`stacked${yType}Labels`] &&
+          (selectedSubSegment === "" || selectedSubSegment === name),
         formatter: (params) => Math.round(params.value),
         fontSize: 8,
       },
@@ -99,8 +93,12 @@ function StackChart({
           return `<div style="text-align: left;"> 
                     Year: ${params.name} <br/> 
                     Sub-Segment: ${params.seriesName} <br/> 
-                    Sum of Value: $${formattedValue} <br/> 
-                    Total: $${total[params.dataIndex]} 
+                    Sum of ${yType}: ${
+            yType === "Value" ? "$" : " "
+          }${formattedValue} <br/> 
+                    Total: ${yType === "Value" ? "$" : " "}${
+            total[params.dataIndex]
+          } 
                 </div>`;
         },
       },
@@ -197,3 +195,5 @@ function StackChart({
 }
 
 export default StackChart;
+
+//useLayout previous Dependencies: segment, selectedSubSegment, selectedSubSegments, yType, showLabels[`stacked${yType}Labels`], colorsArray,

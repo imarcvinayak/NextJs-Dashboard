@@ -9,7 +9,7 @@ function LineChart({
   height,
   segment,
   selectedSubSegment,
-  selectedSubSegments,
+  // selectedSubSegments,
   chartTitle,
   showLabels,
   setshowLabels,
@@ -40,7 +40,6 @@ function LineChart({
       lineData[year].value += valueinusd || 0;
       lineData[year].volume += volumeinMt || 0;
     });
-
     const lineChartData = Object.keys(lineData).map((k) => {
       // return {
       //   year: k,
@@ -52,14 +51,7 @@ function LineChart({
       xAxisData: Object.keys(lineData),
       yAxisData: lineChartData,
     });
-  }, [
-    data,
-    // segment,
-    // selectedSubSegment,
-    // selectedSubSegments,
-    // // showLabels[`lineLabels`],
-    // colorsArray,
-  ]);
+  }, [data]);
   const option = {
     tooltip: {
       trigger: "axis",
@@ -116,12 +108,14 @@ function LineChart({
         label: {
           show: showLabels[`lineLabels`],
           color: "#000",
+          textStyle: {
+            fontSize: 10,
+          },
         },
       },
     ],
   };
   const onChartClick = (params) => {
-    // alert(`You clicked on: ${params.name}, Value: ${params.value}`);
     // console.log(params);
   };
   const handleSwitch = () => {
@@ -156,3 +150,5 @@ function LineChart({
 }
 
 export default React.memo(LineChart);
+
+//useLayout previous dependencies: segment, selectedSubSegment, selectedSubSegments, showLabels[`lineLabels`], colorsArray,
