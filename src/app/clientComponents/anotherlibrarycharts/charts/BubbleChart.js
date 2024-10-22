@@ -45,7 +45,7 @@ function BubbleChart({
       const item = subSegmentsList[key];
       const initialYear = Math.min(...item.map((d) => d["Year"]));
       const finalYear = Math.max(...item.map((d) => d["Year"]));
-      const years = finalYear - initialYear;
+      const years = finalYear - initialYear ? finalYear - initialYear : 1;
       const initialValue = item.find((d) => d["Year"] === initialYear).Value;
       const endingValue = item.find((d) => d["Year"] === finalYear).Value;
       const cagr = calculateCagrValue(initialValue, endingValue, years);
@@ -99,7 +99,7 @@ function BubbleChart({
       },
     },
     grid: {
-      left: "30",
+      left: "40",
       right: "30",
       bottom: "20",
       top: "20",
