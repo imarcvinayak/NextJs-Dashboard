@@ -44,7 +44,7 @@ function LineChart({
       // return {
       //   year: k,
       //   value: Math.round(lineData[k].value / lineData[k].volume),
-      // };
+      //// };
       return Math.round(lineData[k].value / lineData[k].volume);
     });
     setElineData({
