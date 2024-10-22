@@ -108,15 +108,13 @@ function LineChart({
         label: {
           show: showLabels[`lineLabels`],
           color: "#000",
-          textStyle: {
-            fontSize: 10,
-          },
+          fontSize: 10,
         },
       },
     ],
   };
   const onChartClick = (params) => {
-    // console.log(params);
+    if (!params) console.log(params);
   };
   const handleSwitch = () => {
     setshowLabels({

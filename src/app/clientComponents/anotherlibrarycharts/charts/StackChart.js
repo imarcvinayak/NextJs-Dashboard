@@ -56,8 +56,8 @@ function StackChart({
       const stack = {};
       stack["name"] = s;
       stack["data"] = stackData.map((sd) => sd[s]);
-      (stack["total"] = stackData.map((sd) => sd["total"])),
-        estackData.push(stack);
+      stack["total"] = stackData.map((sd) => sd["total"]);
+      estackData.push(stack);
     });
     setEstackData({
       xAxisData: xAxisData,
@@ -98,8 +98,7 @@ function StackChart({
           }${formattedValue} <br/> 
                     Total: ${yType === "Value" ? "$" : " "}${
             total[params.dataIndex]
-          } 
-                </div>`;
+          }</div>`;
         },
       },
       itemStyle: {
