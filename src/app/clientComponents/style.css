@@ -11,16 +11,10 @@
   width: 82%;
   text-align: center;
   justify-content: right;
-  transition: all 0.5s ease; 
+  transition: all 0.5s ease;
 }
 .DistributionCharList > div {
   height: max-content;
-}
-.flex33 > div {
-  flex: 1 0 33%;
-}
-.flex50 > div {
-  flex: 1 0 50%;
 }
 .DistributionCharList > div > div {
   border: 1px solid;

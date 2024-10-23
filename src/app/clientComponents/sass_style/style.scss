@@ -1,0 +1,33 @@
+@media (max-width: 1024px) {
+  .DistributionCharList > div {
+    flex: 1 0 50% !important;
+  }
+}
+@media (max-width: 768px) {
+  .mainheader {
+    flex-wrap: wrap;
+    justify-content: space-around !important;
+  }
+  .flex-header-2 {
+    order: 1;
+  }
+  .flex-header-1 {
+    order: 2;
+  }
+  .flex-header-3 {
+    order: 2;
+  }
+  //   .DistributionCharList {
+  //   }
+  .DistributionCharList > div {
+    flex: 1 0 100% !important;
+  }
+}
+@media (min-width: 1024px) {
+  .flex33 > div {
+    flex: 1 0 33%;
+  }
+  .flex50 > div {
+    flex: 1 0 50%;
+  }
+}
