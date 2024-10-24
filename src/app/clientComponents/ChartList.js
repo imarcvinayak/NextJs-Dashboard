@@ -6,8 +6,9 @@ import Footer from "./footer/Footer";
 import Header from "./header/Header";
 import CardValue from "./output/CardValue";
 import Data from "../data/data.json";
-import * as am5 from "@amcharts/amcharts5";
+// import * as am5 from "@amcharts/amcharts5";
 import "./style.css";
+import "./sass_style/style.css";
 import { palette } from "../utils/Themes";
 
 function ChartList({ colors, setColors, initialtheme }) {
@@ -166,10 +167,6 @@ function ChartList({ colors, setColors, initialtheme }) {
     let totalValueforMaxYear = 0;
     let totalVolumeforMinYear = 0;
     let totalVolumeforMaxYear = 0;
-    let currentYearValue = 0;
-    let currentYearVolume = 0;
-    let prevYearValue = 0;
-    let prevYearVolume = 0;
 
     filteredData.forEach((d) => {
       if (d.Year === year.start) {
@@ -179,14 +176,6 @@ function ChartList({ colors, setColors, initialtheme }) {
       if (d.Year === year.end) {
         totalValueforMaxYear += d.Value || 0;
         totalVolumeforMaxYear += Number(d.Volume) || 0;
-      }
-      if (d.Year === currentYear) {
-        currentYearValue += d.Value || 0;
-        currentYearVolume += Number(d.Volume) || 0;
-      }
-      if (d.Year === prevYear) {
-        prevYearValue += d.Value || 0;
-        prevYearVolume += Number(d.Volume) || 0;
       }
     });
     setTotalValueCAGR(

@@ -24,6 +24,7 @@ function Footer({
         >
           <span style={{ padding: "10px" }}>Select Segment</span>
           <div
+          className="arrow"
             style={{
               position: "absolute",
               right: "-20px",

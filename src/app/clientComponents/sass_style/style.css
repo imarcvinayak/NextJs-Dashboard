@@ -1,0 +1,95 @@
+@media (min-width: 1024px) {
+  .flex33 > div {
+    flex: 1 0 33%;
+  }
+  .flex50 > div {
+    flex: 1 0 50%;
+  }
+}
+@media (max-width: 1024px) {
+  .DistributionCharList > div {
+    flex: 1 0 40% !important;
+  }
+  .flex-header-2 h1 {
+    line-height: 1 !important;
+  }
+  .flex-header-2 .selectSubsegmentContainer {
+    width: 80% !important;
+    align-self: center;
+  }
+  .segment {
+    width: 150px;
+  }
+}
+@media (max-width: 768px) {
+  .mainheader {
+    flex-wrap: wrap;
+    justify-content: space-around !important;
+  }
+  .flex-header-2 {
+    order: 1;
+  }
+  .flex-header-1 {
+    order: 2;
+  }
+  .flex-header-3 {
+    order: 2;
+  }
+  .main {
+    flex-direction: column;
+    justify-content: center;
+  }
+  .cards {
+    flex-direction: row;
+  }
+  .DistributionCharList {
+    width: auto;
+    margin: 0 !important;
+  }
+  .segment {
+    flex: 1 0 15%;
+  }
+}
+@media (max-width: 425px) {
+  .DistributionCharList > div {
+    flex: 1 0 100% !important;
+  }
+  footer {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  footer .arrow {
+    display: none;
+  }
+  footer .selectSegment {
+    position: relative;
+  }
+  footer .selectSegment:before {
+    content: "";
+    left: -20px;
+    width: 0px;
+    height: 20px;
+    position: absolute;
+    border-right: 20px solid rgb(103, 113, 220);
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+  }
+  footer .selectSegment:after {
+    content: "";
+    top: 0;
+    right: -20px;
+    width: 0px;
+    height: 20px;
+    position: absolute;
+    border-left: 20px solid rgb(103, 113, 220);
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+  }
+  footer .buttonContainer {
+    margin: 0;
+  }
+  footer .buttonContainer .segment {
+    font-size: 14px;
+  }
+}/*# sourceMappingURL=style.css.map */
