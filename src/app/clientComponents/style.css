@@ -9,6 +9,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   width: 82%;
+  height: fit-content;
   text-align: center;
   justify-content: right;
   transition: all 0.5s ease;
@@ -23,7 +24,7 @@
 .buttonContainer {
   display: flex;
   flex-wrap: wrap;
-  width: 100%;
+  /* width: 100%; */
   margin-left: 20px;
   gap: 10px;
 }

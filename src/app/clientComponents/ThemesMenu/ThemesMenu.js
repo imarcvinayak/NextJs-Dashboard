@@ -6,8 +6,9 @@ function ThemesMenu({
   setColorsArrays,
   // colorsArray,
 }) {
-    const dropDownRef = useRef(null);
-    const [isOpen, setIsOpen] = useState(false);
+  const dropDownRef = useRef(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedColor, setSelectedColor] = useState('Custom Blue Theme');
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropDownRef.current && !dropDownRef.current.contains(event.target)) {
@@ -22,10 +23,11 @@ function ThemesMenu({
   const toggleDropDown = () => {
     setIsOpen(!isOpen);
   };
-  const handleSelectedColor = (arr) => {
+  const handleSelectedColor = (name,arr) => {
     // setIsOpen(false)
     // setSelectedColor(selectedColor === color ? "" : color);
-    setColorsArrays(arr)
+    setSelectedColor(name);
+    setColorsArrays(arr);
   };
   return (
     <div className="colorContainer dropdown-container" ref={dropDownRef}>
@@ -44,20 +46,20 @@ function ThemesMenu({
                 key={name}
                 className={" dropdown-item"}
                 // style={{ backgroundColor: color[i].hex }}
-                onClick={() => handleSelectedColor(arr)}
+                onClick={() => handleSelectedColor(name, arr)}
               >
                 <div className="palettecontainer">
-                  {arr.map((a,i) => {
+                  {arr.map((a, i) => {
                     return (
                       <div
-                        key={a+i}
+                        key={a + i}
                         className="palettecolordiv"
                         style={{ backgroundColor: a }}
                       ></div>
                     );
                   })}
                 </div>
-                {name}
+                <span className={(selectedColor === name) && "tick-mark"}>{name}</span>
               </button>
             );
           })}

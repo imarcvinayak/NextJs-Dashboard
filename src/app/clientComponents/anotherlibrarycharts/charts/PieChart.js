@@ -19,7 +19,7 @@ function PieChart({
 }) {
   // console.log(data, "dd");
   const [EpieData, setEpieData] = useState([]);
-  const [option, setOption] = useState();
+  // const [option, setOption] = useState();
   useLayoutEffect(() => {
     if (!data) return;
     const pieData = [...data];
@@ -48,9 +48,7 @@ function PieChart({
     };
 
     setEpieData(processData(pieData));
-  }, [
-    data,
-  ]);
+  }, [data, colorsArray]);
 
   const onChartClick = (params) => {
     setSelectedSubSegment(

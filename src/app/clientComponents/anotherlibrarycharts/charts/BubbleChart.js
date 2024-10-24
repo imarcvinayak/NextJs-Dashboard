@@ -72,7 +72,7 @@ function BubbleChart({
         };
       })
     );
-  }, [data]);
+  }, [data,colorsArray]);
   useEffect(() => {
     setShouldRenderChart(false);
     const timer = setTimeout(() => {
