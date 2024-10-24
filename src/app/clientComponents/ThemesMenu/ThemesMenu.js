@@ -59,7 +59,7 @@ function ThemesMenu({
                     );
                   })}
                 </div>
-                <span className={(selectedColor === name) && "tick-mark"}>{name}</span>
+                <span className={(selectedColor === name) ? "tick-mark":''}>{name}</span>
               </button>
             );
           })}

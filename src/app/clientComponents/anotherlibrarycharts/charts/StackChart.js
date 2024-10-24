@@ -21,6 +21,7 @@ function StackChart({
   const [EstackData, setEstackData] = useState({
     xAxisData: [],
     stackData: [],
+    totalArray: [],
   });
   const [shouldRenderChart, setShouldRenderChart] = useState(true);
   useLayoutEffect(() => {
@@ -34,19 +35,17 @@ function StackChart({
 
       if (!stackDummyData[key]) stackDummyData[key] = { key: key };
       if (!stackDummyData[key][segment]) stackDummyData[key][segment] = 0;
+      if (!stackDummyData[key]["total"]) stackDummyData[key]["total"] = 0;
       stackDummyData[key][segment] += d[yType] || 0;
+      stackDummyData[key]["total"] += d[yType] || 0;
 
-      return stackDummyData;
+      // return stackDummyData;
     });
     const stackData = Object.values(stackDummyData);
     stackData.map((d) => {
-      const subsegments = Object.keys(d).filter((d) => d !== "key");
-      subsegments.forEach((s) => (d[s] = parseFloat(d[s].toFixed(2))));
-      const total = subsegments.reduce((acc, cur) => (acc += d[cur]), 0);
-
-      return (d["total"] = total.toFixed(2));
+      const round2decimals = Object.keys(d).filter((d) => d !== "key");
+      round2decimals.forEach((s) => (d[s] = parseFloat(d[s].toFixed(2))));
     });
-
     const xAxisData = stackData.map((s) => s["key"]);
     const stacksubsegments = Object.keys(stackData[0]).filter(
       (d) => d !== "key" && d !== "total"
@@ -56,12 +55,13 @@ function StackChart({
       const stack = {};
       stack["name"] = s;
       stack["data"] = stackData.map((sd) => sd[s]);
-      stack["total"] = stackData.map((sd) => sd["total"]);
       estackData.push(stack);
     });
+    const totalArray = stackData.map((sd) => sd["total"]);
     setEstackData({
       xAxisData: xAxisData,
       stackData: estackData,
+      totalArray: totalArray,
     });
   }, [data]);
   useEffect(() => {
@@ -73,7 +73,7 @@ function StackChart({
     return () => clearTimeout(timer); // Clean up the timer on unmount
   }, [segment]);
 
-  const series = EstackData.stackData.map(({ name, data, total }, i) => {
+  const series = EstackData.stackData.map(({ name, data }, i) => {
     return {
       name,
       type: "bar",
@@ -97,7 +97,7 @@ function StackChart({
             yType === "Value" ? "$" : " "
           }${formattedValue} <br/> 
                     Total: ${yType === "Value" ? "$" : " "}${
-            total[params.dataIndex]
+            EstackData.totalArray[params.dataIndex]
           }</div>`;
         },
       },
@@ -106,6 +106,31 @@ function StackChart({
           selectedSubSegment === "" || selectedSubSegment === name ? 1 : 0.3,
       },
       data: data,
+      markPoint: {
+        data:
+          showLabels[`stacked${yType}Labels`] &&
+          selectedSubSegment === "" &&
+          EstackData.totalArray.map((total, index) => ({
+            value: total,
+            xAxis: index,
+            yAxis: total,
+            label: {
+              show: true,
+              position: "bottom",
+              distance: -12,
+              formatter: `${Math.round(total)}`, // Show the total value
+              fontSize: 10,
+              fontWeight: "bold",
+              color: "#000",
+            },
+            itemStyle: {
+              color: "transparent",
+            },
+            tooltip: {
+              show: false,
+            },
+          })),
+      },
     };
   });
 
